@@ -7,6 +7,7 @@ import 'package:highway_weight/models/general_lists_model.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/styles/text_styles.dart';
 import 'package:highway_weight/widgets/pagination.dart';
+import 'package:highway_weight/widgets/popup_modal.dart';
 import 'package:highway_weight/widgets/primary_button.dart';
 import 'package:intl/intl.dart';
 
@@ -112,7 +113,32 @@ class HomeGeneralReports extends StatelessWidget {
                                 ),
                                 SizedBox(width: 4.0),
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    PopupModal.showModal(
+                                      context,
+                                      title: "Delete General Report",
+                                      content: Image.asset(
+                                        'assets/images/logo.png',
+                                        width: 100,
+                                      ),
+                                      actions: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            PrimaryButton(
+                                              text: "Yes",
+                                              onPressed: () {},
+                                            ),
+                                            SizedBox(width: 10.0),
+                                            PrimaryButton(
+                                              text: "No",
+                                              onPressed: () {},
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  },
                                   icon: Icon(
                                     FontAwesomeIcons.trash,
                                     color: AppColors.blackPrimary,

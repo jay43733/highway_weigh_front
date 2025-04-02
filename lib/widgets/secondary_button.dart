@@ -20,7 +20,7 @@ class SecondaryButton extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       shape: ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
-        side: BorderSide(color: AppColors.blackPrimary, width: 1),
+        side: BorderSide(color: AppColors.greyPrimary, width: 1),
       ),
       onPressed: onPressed,
       child: Row(

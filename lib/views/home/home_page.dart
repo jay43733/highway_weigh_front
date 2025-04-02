@@ -41,24 +41,26 @@ class HomePage extends StatelessWidget {
       }
     }
 
-    return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            HomeHero(authController: authController, onNavChange: onNavChange),
-            HomeGeneralReports(
-              generalListsController: generalReportController,
-              key: navBarKey[0],
-            ),
-            HomeMainReports(
-              mainListsController: mainReportController,
-              key: navBarKey[1],
-            ),
-            HomeMap(
-              stationsController: stationsController,
-              key: navBarKey[2],
-            ),
-          ],
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              HomeHero(authController: authController, onNavChange: onNavChange),
+              HomeGeneralReports(
+                generalListsController: generalReportController,
+                key: navBarKey[0],
+              ),
+              HomeMainReports(
+                mainListsController: mainReportController,
+                key: navBarKey[1],
+              ),
+              HomeMap(
+                stationsController: stationsController,
+                key: navBarKey[2],
+              ),
+            ],
+          ),
         ),
       ),
     );

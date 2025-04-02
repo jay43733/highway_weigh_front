@@ -25,17 +25,11 @@ class App extends StatelessWidget {
 final GoRouter _router = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => Scaffold(body: Center(child: LoginPage())),
-    ),
-    GoRoute(
-      path: '/home',
-      builder: (context, state) => Scaffold(body: Center(child: HomePage())),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const LoginPage()),
+    GoRoute(path: '/home', builder: (context, state) => const HomePage()),
     GoRoute(
       path: '/general_reports',
-      builder: (context, state) => Scaffold(body: Center(child: GeneralReportsPage())),
+      builder: (context, state) => const GeneralReportsPage(),
     ),
   ],
 );

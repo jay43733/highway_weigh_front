@@ -20,13 +20,23 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  String? validateField(String field, String value) {
-    Map<String, String> error = Map.from(errorMessage);
-    if (field == "email" && value == '') {
-      error['email'] = "Email is required";
+  String? validateField(String field, String? value) {
+    final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+    if (field == 'email') {
+      if (value!.trim().isEmpty) {
+        return "Email is required";
+      }
+      if (!emailRegex.hasMatch(value)) {
+        return "Please input email format.";
+      }
     }
-    if (field == "password" && value == '') {
-      error['password'] = "Password is required";
+    if (field == 'password') {
+      if (value!.trim().isEmpty) {
+        return "Password is required.";
+      }
+      if (value.trim().length < 8) {
+        return "Password must contain at least 8 characters.";
+      }
     }
     return null;
   }

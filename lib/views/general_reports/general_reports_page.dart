@@ -11,38 +11,41 @@ class GeneralReportsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final generalListsController = Provider.of<GeneralListsController>(context);
+    final generalListsController = Provider.of<GeneralListsController>(context, listen: false);
     final stationsController = Provider.of<StationsController>(context);
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.blackPrimary,
-          image: DecorationImage(
-            image: AssetImage('assets/images/traffic1.jpg'),
-            colorFilter: ColorFilter.mode(
-              Colors.black.withValues(alpha: 0.7),
-              BlendMode.darken,
-            ),
-            filterQuality: FilterQuality.high,
-            opacity: 0.8,
-            fit: BoxFit.cover,
-          ),
-        ),
-        height: 1000,
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40.0,
-                vertical: 20.0,
+    
+    return Scaffold(
+      body: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.blackPrimary,
+            image: DecorationImage(
+              image: AssetImage('assets/images/traffic1.jpg'),
+              colorFilter: ColorFilter.mode(
+                Colors.black.withValues(alpha: 0.7),
+                BlendMode.darken,
               ),
-              child: CustomAppBar(),
+              filterQuality: FilterQuality.high,
+              opacity: 0.8,
+              fit: BoxFit.cover,
             ),
-            GeneralReportForm(
-              generalListsController: generalListsController,
-              stationsController: stationsController,
-            ),
-          ],
+          ),
+          height: 1000,
+          child: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40.0,
+                  vertical: 20.0,
+                ),
+                child: CustomAppBar(),
+              ),
+              GeneralReportForm(
+                generalListsController: generalListsController,
+                stationsController: stationsController,
+              ),
+            ],
+          ),
         ),
       ),
     );

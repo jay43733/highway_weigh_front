@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:highway_weight/app.dart';
 import 'package:highway_weight/constants/custom_scroll_behavior.dart';
 import 'package:highway_weight/controllers/auth_controller.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 // Run with fixed port for web:  flutter run -d chrome --web-port=8000
 
 void main() {
+  GoRouter.optionURLReflectsImperativeAPIs = true; // Config GoRouter to reflect changing path
   usePathUrlStrategy();
   runApp(
     MultiProvider(

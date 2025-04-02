@@ -1,13 +1,16 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:highway_weight/models/general_lists_model.dart';
 import 'package:highway_weight/models/stations_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 class GeneralListsController extends ChangeNotifier {
   String generalName = '';
   String description = '';
-  int category = 0;
-  LatLng station = LatLng(0, 0);
+  int? category;
+  LatLng? station;
+  Uint8List? image;
+  Map<String, String> errorMessage = {};
 
   List<GeneralListsModel> generalReportLists = [
     GeneralListsModel(
@@ -193,10 +196,68 @@ class GeneralListsController extends ChangeNotifier {
     if (field == 'station') {
       station = value;
     }
+    if (field == 'image') {
+      image = value;
+    }
+    print("name: $generalName");
     notifyListeners();
-    print('general name: $generalName');
-    print('Category: $category');
-    print('Station: $station');
+  }
+
+  String? validateField(String field, dynamic value) {
+    if (field == 'generalName') {
+      if (value == '') {
+        return "Please type issue name.";
+      }
+    }
+    if (field == 'description') {
+      if (value == '') {
+        return "Please type the issue description.";
+      }
+    }
+    if (field == 'category') {
+      if (value == null) {
+        return "Please choose the issue category.";
+      }
+    }
+    if (field == 'station') {
+      if (value == null) {
+        return "Please choose a station.";
+      }
+    }
+    return null;
+  }
+
+  void validateImage() {
+    Map<String, String> error = Map.from(errorMessage);
+    if (image == null) {
+      error['image'] = "Please attach an image for evidence";
+    } else {
+      error.remove('image');
+    }
+    errorMessage = error;
+    notifyListeners();
+  }
+
+  Future<void> getImageGallery() async {
+    final XFile? pickFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
+
+    if (pickFile != null) {
+      if (kIsWeb) {
+        Uint8List imageBytes = await pickFile.readAsBytes();
+        updateField('image', imageBytes);
+        print("Image: $image");
+      }
+    } else {
+      print("No Image at all");
+    }
+  }
+
+  void clearImage() {
+    image = null;
+    notifyListeners();
   }
 
   void onPageChanged(int newPage) {

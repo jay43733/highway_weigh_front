@@ -6,20 +6,22 @@ import 'package:highway_weight/controllers/auth_controller.dart';
 import 'package:highway_weight/controllers/general_lists_controller.dart';
 import 'package:highway_weight/controllers/main_lists_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
+import 'package:highway_weight/controllers/users_controller.dart';
 import 'package:highway_weight/styles/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
-
 // Run with fixed port for web:  flutter run -d chrome --web-port=8000
 
 void main() {
-  GoRouter.optionURLReflectsImperativeAPIs = true; // Config GoRouter to reflect changing path
+  GoRouter.optionURLReflectsImperativeAPIs =
+      true; // Config GoRouter to reflect changing path
   usePathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthController()),
+        ChangeNotifierProvider(create: (_) => UsersController()),
+        ChangeNotifierProvider(create: (_) => AuthController(usersController: UsersController())),
         ChangeNotifierProvider(create: (_) => GeneralListsController()),
         ChangeNotifierProvider(create: (_) => StationsController()),
         ChangeNotifierProxyProvider<

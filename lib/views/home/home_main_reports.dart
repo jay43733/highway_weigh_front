@@ -20,17 +20,8 @@ class HomeMainReports extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Main Reports", style: TextStyles.h3Semi),
-              PrimaryButton(
-                icon: Icons.add,
-                text: "Add Report",
-                onPressed: () {},
-              ),
-            ],
-          ),
+          Text("Main Reports", style: TextStyles.h3Semi),
+       
           SizedBox(height: 24.0),
           DataTable(
             sortAscending: true,

@@ -169,9 +169,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         Image.asset("assets/images/user.png", width: 20.0),
                         SizedBox(width: 8.0),
                         Text(
-                          authController.email == ""
-                              ? "Jay Tanakit"
-                              : authController.email,
+                          authController.username == ""
+                              ? "Guest"
+                              : authController.username,
                           style: TextStyles.labelReg.copyWith(
                             color: AppColors.whitePrimary,
                           ),

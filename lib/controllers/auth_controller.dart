@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:highway_weight/controllers/users_controller.dart';
 
 class AuthController extends ChangeNotifier {
+  final UsersController usersController;
+  AuthController({required this.usersController});
   bool showPassword = false;
+  String username = '';
   String email = '';
   String password = '';
   Map<String, String> errorMessage = {};
+  String alertMessage = '';
   void setShowPassword() {
     showPassword = !showPassword;
     notifyListeners();
@@ -39,5 +44,29 @@ class AuthController extends ChangeNotifier {
       }
     }
     return null;
+  }
+
+  bool checkEmailPassword() {
+    if (email.trim() != '' && password.trim() != '') {
+      final isEmailPasswordValid = usersController.users.where(
+        (item) => item.email == email && item.password == password,
+      );
+      if (isEmailPasswordValid.isNotEmpty) {
+        final selectedName = isEmailPasswordValid.single.name;
+        print(selectedName);
+        username = selectedName;
+        alertMessage = 'Welcome to Highway Weigh !';
+        notifyListeners();
+        return true;
+      } else {
+        alertMessage = 'Email and Password are invalid';
+        notifyListeners();
+        return false;
+      }
+    } else {
+      alertMessage = 'Please complete email and password before login';
+      notifyListeners();
+      return false;
+    }
   }
 }

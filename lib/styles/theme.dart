@@ -7,7 +7,6 @@ class AppTheme {
     color: AppColors.blackPlaceholder,
     size: 22.0,
   );
-  
 
   static final DropdownMenuThemeData _dropdownMenuThemeData =
       DropdownMenuThemeData(
@@ -119,7 +118,10 @@ class AppTheme {
   );
 
   static final DialogThemeData _dialogThemeData = DialogThemeData(
-    actionsPadding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 20.0),
+    actionsPadding: const EdgeInsets.symmetric(
+      horizontal: 64.0,
+      vertical: 20.0,
+    ),
     backgroundColor: AppColors.whitePrimary,
     contentTextStyle: TextStyles.bodySemi,
     alignment: Alignment.center,
@@ -128,6 +130,15 @@ class AppTheme {
     titleTextStyle: TextStyles.h4Semi,
   );
 
+  static final SnackBarThemeData _snackBarThemeData = SnackBarThemeData(
+    backgroundColor: AppColors.whitePrimary,
+    behavior: SnackBarBehavior.floating,
+    contentTextStyle: TextStyles.bodySemi,
+    shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+    showCloseIcon: true,
+    closeIconColor: AppColors.blackPrimary,
+    elevation: 20.0,
+  );
 
   static final TooltipThemeData _tooltipThemeData = TooltipThemeData(
     showDuration: Duration(milliseconds: 300),
@@ -150,6 +161,7 @@ class AppTheme {
     outlinedButtonTheme: _outlinedButtonThemeData,
     dropdownMenuTheme: _dropdownMenuThemeData,
     dialogTheme: _dialogThemeData,
+    snackBarTheme: _snackBarThemeData,
     fontFamily: 'IBMPlexSansThai',
   );
 }

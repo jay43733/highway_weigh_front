@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
           duration: Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
-        print("Right index: $index");
+        print("Current index: $index");
       } else {
         print("Context for key at index $index is null");
       }
@@ -46,7 +46,10 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              HomeHero(authController: authController, onNavChange: onNavChange),
+              HomeHero(
+                authController: authController,
+                onNavChange: onNavChange,
+              ),
               HomeGeneralReports(
                 generalListsController: generalReportController,
                 key: navBarKey[0],

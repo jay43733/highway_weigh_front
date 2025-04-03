@@ -17,13 +17,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 1,
       name: 'ร้องเรียนรถบรรทุกใกล้วัดพระแก้ว',
       category: IssueCategory.overWeight,
-      createdAt: DateTime(
-        2025,
-        3,
-        20,
-        14,
-        35,
-      ), // Added hour (14) and minute (35)
+      createdAt: DateTime(2025, 3, 20, 14, 35),
       status: StatusType.pending,
       description: 'มีการขนถ่ายเกินน้ำหนักบริเวณใกล้วัดพระแก้ว',
       station: StationsModel(
@@ -35,7 +29,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 2,
       name: 'แจ้งเจ้าหน้าที่ใช้อำนาจไม่เหมาะสม',
       category: IssueCategory.improperStaff,
-      createdAt: DateTime(2025, 3, 18, 9, 15), // Added hour (9) and minute (15)
+      createdAt: DateTime(2025, 3, 18, 9, 15),
       status: StatusType.approved,
       description: 'มีเจ้าหน้าที่พูดจาไม่เหมาะสมใกล้สถานีวัดอรุณ',
       station: StationsModel(
@@ -47,13 +41,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 3,
       name: 'รถบรรทุกน้ำหนักเกินเข้าพื้นที่เมืองเก่า',
       category: IssueCategory.overWeight,
-      createdAt: DateTime(
-        2025,
-        3,
-        15,
-        16,
-        45,
-      ), // Added hour (16) and minute (45)
+      createdAt: DateTime(2025, 3, 15, 16, 45),
       status: StatusType.rejected,
       description: 'พบรถบรรทุกน้ำหนักเกินวิ่งผ่านเขตเมืองเก่าเชียงใหม่',
       station: StationsModel(
@@ -65,13 +53,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 4,
       name: 'พนักงานตรวจสอบแสดงท่าทีไม่เหมาะสม',
       category: IssueCategory.improperStaff,
-      createdAt: DateTime(
-        2025,
-        3,
-        12,
-        11,
-        20,
-      ), // Added hour (11) and minute (20)
+      createdAt: DateTime(2025, 3, 12, 11, 20),
       status: StatusType.pending,
       description: 'มีเจ้าหน้าที่ปฏิบัติงานไม่เหมาะสมที่ป่าตอง',
       station: StationsModel(
@@ -83,7 +65,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 5,
       name: 'รถบรรทุกทำลายทางโบราณ',
       category: IssueCategory.overWeight,
-      createdAt: DateTime(2025, 3, 10, 8, 30), // Added hour (8) and minute (30)
+      createdAt: DateTime(2025, 3, 10, 8, 30),
       status: StatusType.approved,
       description: 'มีการวิ่งรถบรรทุกขนาดใหญ่บริเวณอุทยานประวัติศาสตร์อยุธยา',
       station: StationsModel(
@@ -95,13 +77,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 6,
       name: 'เจ้าหน้าที่เรียกรับผลประโยชน์',
       category: IssueCategory.improperStaff,
-      createdAt: DateTime(
-        2025,
-        3,
-        8,
-        13,
-        10,
-      ), // Added hour (13) and minute (10)
+      createdAt: DateTime(2025, 3, 8, 13, 10),
       status: StatusType.pending,
       description: 'ร้องเรียนเจ้าหน้าที่ที่ศาลพระพรหมเอราวัณ',
       station: StationsModel(
@@ -113,13 +89,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 7,
       name: 'พบรถน้ำหนักเกินเข้าไร่เลย์โดยไม่ได้รับอนุญาต',
       category: IssueCategory.overWeight,
-      createdAt: DateTime(
-        2025,
-        3,
-        6,
-        15,
-        25,
-      ), // Added hour (15) and minute (25)
+      createdAt: DateTime(2025, 3, 6, 15, 25),
       status: StatusType.approved,
       description: 'รถบรรทุกใหญ่เข้าเขตไร่เลย์กระบี่',
       station: StationsModel(
@@ -131,13 +101,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 8,
       name: 'พฤติกรรมไม่เหมาะสมของเจ้าหน้าที่บนดอยอินทนนท์',
       category: IssueCategory.improperStaff,
-      createdAt: DateTime(
-        2025,
-        3,
-        3,
-        10,
-        05,
-      ), // Added hour (10) and minute (05)
+      createdAt: DateTime(2025, 3, 3, 10, 05),
       status: StatusType.rejected,
       description: 'พบเจ้าหน้าที่ใช้น้ำเสียงรุนแรงกับนักท่องเที่ยว',
       station: StationsModel(
@@ -149,13 +113,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 9,
       name: 'รถบรรทุกทำลายโบราณสถานสุโขทัย',
       category: IssueCategory.overWeight,
-      createdAt: DateTime(
-        2025,
-        3,
-        1,
-        17,
-        40,
-      ), // Added hour (17) and minute (40)
+      createdAt: DateTime(2025, 3, 1, 17, 40),
       status: StatusType.approved,
       description: 'การเข้าออกของรถขนาดใหญ่กระทบต่อโบราณสถาน',
       station: StationsModel(
@@ -167,13 +125,7 @@ class GeneralListsController extends ChangeNotifier {
       id: 10,
       name: 'ร้องเรียนเจ้าหน้าที่ที่ด่านเขาใหญ่',
       category: IssueCategory.improperStaff,
-      createdAt: DateTime(
-        2025,
-        2,
-        28,
-        12,
-        50,
-      ), // Added hour (12) and minute (50)
+      createdAt: DateTime(2025, 2, 28, 12, 50),
       status: StatusType.pending,
       description: 'เจ้าหน้าที่ทำการตรวจไม่เป็นธรรมที่ด่านเข้าอุทยาน',
       station: StationsModel(

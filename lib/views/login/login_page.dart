@@ -4,7 +4,9 @@ import 'package:highway_weight/controllers/auth_controller.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/styles/text_styles.dart';
 import 'package:highway_weight/widgets/custom_text_form_field.dart';
+import 'package:highway_weight/widgets/error_snack_bar.dart';
 import 'package:highway_weight/widgets/primary_button.dart';
+import 'package:highway_weight/widgets/success_snack_bar.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -115,11 +117,23 @@ class LoginPage extends StatelessWidget {
                       SizedBox(height: 24.0),
                       PrimaryButton(
                         onPressed: () {
-                          // if (_formKey.currentState!.validate()) {
-                          //   _formKey.currentState!.save();
-                          context.go('/home');
-                          //     _formKey.currentState!.reset();
-                          //   }
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            if (authController.checkEmailPassword()) {
+                              SuccessSnackBar.show(
+                                context,
+                                title: authController.alertMessage,
+                                subtitle: authController.email
+                              );
+                              context.go('/home');
+                              _formKey.currentState!.reset();
+                            } else {
+                              ErrorSnackBar.show(
+                                context,
+                                title: authController.alertMessage,
+                              );
+                            }
+                          }
                         },
                         text: "LOG IN",
                       ),
@@ -134,3 +148,6 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+
+//tossapon43733@hotmail.com
+//12345678

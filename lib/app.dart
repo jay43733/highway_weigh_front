@@ -7,6 +7,7 @@ import 'package:highway_weight/views/general_reports/general_reports_page.dart';
 import 'package:highway_weight/views/home/home_page.dart';
 import 'package:highway_weight/views/loading_page.dart';
 import 'package:highway_weight/views/login/login_page.dart';
+import 'package:highway_weight/views/update_general_reports/update_general_reports_page.dart';
 
 // Routing Management in App
 class App extends StatelessWidget {
@@ -47,6 +48,13 @@ final GoRouter _router = GoRouter(
       builder: (context, state) {
         NavigationService.savePath("/general_reports");
         return const GeneralReportsPage();
+      },
+    ),
+    GoRoute(
+      path: '/updated_general_reports',
+      builder: (context, state) {
+        NavigationService.savePath("/updated_general_reports");
+        return const UpdateGeneralReportsPage();
       },
     ),
   ],

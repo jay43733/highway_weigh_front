@@ -17,8 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final String routeNow =
         GoRouter.of(context).routeInformationProvider.value.uri.toString();
-    final authController = Provider.of<AuthController>(context);
-    print("Route now : $routeNow");
+    final authController = Provider.of<AuthController>(context, listen: false);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -44,7 +43,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: TextButton(
-                    onPressed: ()=> context.go('/home'),
+                    onPressed: () => context.go('/home'),
                     child: Text(
                       'หน้าแรก',
                       style: TextStyle(color: AppColors.whitePrimary),
@@ -77,9 +76,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         Image.asset("assets/images/user.png", width: 20.0),
                         SizedBox(width: 8.0),
                         Text(
-                          authController.email == ""
-                              ? "Jay Tanakit"
-                              : authController.email,
+                          authController.user ?? "Guest",
                           style: TextStyles.labelReg.copyWith(
                             color: AppColors.whitePrimary,
                           ),
@@ -150,10 +147,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     itemBuilder: (context) {
                       return menuAtAppbar.asMap().entries.map((entries) {
                         return PopupMenuItem(
-                          onTap: () {
-                            entries.key == 1
-                                ? context.pushReplacement('/')
-                                : null;
+                          onTap: () async {
+                            if (entries.key == 1) {
+                              await authController.logout();
+                              Future.microtask(() => context.go("/login"));
+                            } else {
+                              null;
+                            }
                           },
                           child: Text(
                             entries.value.toString(),
@@ -169,9 +169,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         Image.asset("assets/images/user.png", width: 20.0),
                         SizedBox(width: 8.0),
                         Text(
-                          authController.username == ""
-                              ? "Guest"
-                              : authController.username,
+                          authController.user ?? "Guest",
                           style: TextStyles.labelReg.copyWith(
                             color: AppColors.whitePrimary,
                           ),

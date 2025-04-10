@@ -2,18 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:highway_weight/controllers/general_lists_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
 import 'package:highway_weight/styles/colors.dart';
-import 'package:highway_weight/views/general_reports/general_report_form.dart';
+import 'package:highway_weight/views/update_general_reports/update_general_report_form.dart';
 import 'package:highway_weight/widgets/custom_app_bar.dart';
+import 'package:highway_weight/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
-class GeneralReportsPage extends StatelessWidget {
-  const GeneralReportsPage({super.key});
+class UpdateGeneralReportsPage extends StatelessWidget {
+  const UpdateGeneralReportsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final generalReportsController = Provider.of<GeneralReportsController>(context, listen: false);
+    final generalReportsController = Provider.of<GeneralReportsController>(
+      context,
+      listen: false,
+    );
+    print("Loading ... ${generalReportsController.isLoading}");
     final stationsController = Provider.of<StationsController>(context);
-    
+
+    if (generalReportsController.isLoading) {
+      return const Loading();
+    }
+
     return Scaffold(
       body: Center(
         child: Container(
@@ -40,7 +49,7 @@ class GeneralReportsPage extends StatelessWidget {
                 ),
                 child: CustomAppBar(),
               ),
-              GeneralReportForm(
+              UpdateGeneralReportForm(
                 generalReportsController: generalReportsController,
                 stationsController: stationsController,
               ),

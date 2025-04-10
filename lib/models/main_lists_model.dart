@@ -21,7 +21,7 @@ class StatusType {
 
 class MainListsModel {
   final int id;
-  final GeneralListsModel generalListReport;
+  final GeneralReportsModel generalListReport;
   final String? comment;
   final bool isActive;
   final DateTime createdAt;

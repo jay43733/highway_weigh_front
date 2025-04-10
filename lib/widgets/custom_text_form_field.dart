@@ -4,6 +4,7 @@ import 'package:highway_weight/styles/text_styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String labelText;
+  final String? initialValue;
   final String? hintText;
   final IconData? suffixIcon;
   final bool? obscureText;
@@ -22,11 +23,13 @@ class CustomTextFormField extends StatelessWidget {
     this.onSuffixPressed,
     this.validator,
     this.maxLines,
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       cursorColor: AppColors.brandSecondary,
       enableSuggestions: true,
       autocorrect: true,

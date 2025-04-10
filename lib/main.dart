@@ -11,7 +11,7 @@ import 'package:highway_weight/styles/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
-// Run with fixed port for web:  flutter run -d chrome --web-port=8000
+// Run with fixed port for web: flutter run -d chrome --web-port=8000
 
 void main() {
   GoRouter.optionURLReflectsImperativeAPIs =
@@ -21,22 +21,10 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UsersController()),
-        ChangeNotifierProvider(create: (_) => AuthController(usersController: UsersController())),
-        ChangeNotifierProvider(create: (_) => GeneralListsController()),
+        ChangeNotifierProvider(create: (_) => AuthController()),
+        ChangeNotifierProvider(create: (_) => GeneralReportsController()),
+        ChangeNotifierProvider(create: (_) => MainListsController()),
         ChangeNotifierProvider(create: (_) => StationsController()),
-        ChangeNotifierProxyProvider<
-          GeneralListsController,
-          MainListsController
-        >(
-          create:
-              (_) => MainListsController(
-                generalListsController: GeneralListsController(),
-              ),
-          update:
-              (_, generalListsController, previous) => MainListsController(
-                generalListsController: generalListsController,
-              ),
-        ),
       ],
       child: MyApp(),
     ),

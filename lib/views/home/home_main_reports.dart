@@ -6,7 +6,6 @@ import 'package:highway_weight/models/general_lists_model.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/styles/text_styles.dart';
 import 'package:highway_weight/widgets/pagination.dart';
-import 'package:highway_weight/widgets/primary_button.dart';
 import 'package:intl/intl.dart';
 
 class HomeMainReports extends StatelessWidget {
@@ -15,13 +14,33 @@ class HomeMainReports extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (mainListsController.mainReportLists.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 60.0),
+        child: Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Main Reports", style: TextStyles.h3Semi),
+            SizedBox(height: 24.0),
+            Center(
+              child: Text(
+                "No main report",
+                style: TextStyles.captionReg.copyWith(
+                  color: AppColors.redColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 60.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Main Reports", style: TextStyles.h3Semi),
-       
           SizedBox(height: 24.0),
           DataTable(
             sortAscending: true,

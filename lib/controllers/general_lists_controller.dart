@@ -1,143 +1,130 @@
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:highway_weight/models/general_lists_model.dart';
-import 'package:highway_weight/models/stations_model.dart';
+import 'package:highway_weight/repositories/general_report_repository.dart';
 import 'package:image_picker/image_picker.dart';
 
-class GeneralListsController extends ChangeNotifier {
+class GeneralReportsController extends ChangeNotifier {
+  final GeneralReportRepository _repository = GeneralReportRepository();
+  bool isLoading = false;
   String generalName = '';
   String description = '';
   int? category;
-  LatLng? station;
+  int? station;
   Uint8List? image;
+  String? imageFileName;
+  int? reportId;
   Map<String, String> errorMessage = {};
 
-  List<GeneralListsModel> generalReportLists = [
-    GeneralListsModel(
-      id: 1,
-      name: 'ร้องเรียนรถบรรทุกใกล้วัดพระแก้ว',
-      category: IssueCategory.overWeight,
-      createdAt: DateTime(2025, 3, 20, 14, 35),
-      status: StatusType.pending,
-      description: 'มีการขนถ่ายเกินน้ำหนักบริเวณใกล้วัดพระแก้ว',
-      station: StationsModel(
-        name: 'Grand Palace, Bangkok',
-        latLng: LatLng(13.7500, 100.4913),
-      ),
-    ),
-    GeneralListsModel(
-      id: 2,
-      name: 'แจ้งเจ้าหน้าที่ใช้อำนาจไม่เหมาะสม',
-      category: IssueCategory.improperStaff,
-      createdAt: DateTime(2025, 3, 18, 9, 15),
-      status: StatusType.approved,
-      description: 'มีเจ้าหน้าที่พูดจาไม่เหมาะสมใกล้สถานีวัดอรุณ',
-      station: StationsModel(
-        name: 'Wat Arun, Bangkok',
-        latLng: LatLng(13.7436, 100.4889),
-      ),
-    ),
-    GeneralListsModel(
-      id: 3,
-      name: 'รถบรรทุกน้ำหนักเกินเข้าพื้นที่เมืองเก่า',
-      category: IssueCategory.overWeight,
-      createdAt: DateTime(2025, 3, 15, 16, 45),
-      status: StatusType.rejected,
-      description: 'พบรถบรรทุกน้ำหนักเกินวิ่งผ่านเขตเมืองเก่าเชียงใหม่',
-      station: StationsModel(
-        name: 'Chiang Mai Old City',
-        latLng: LatLng(18.7883, 98.9853),
-      ),
-    ),
-    GeneralListsModel(
-      id: 4,
-      name: 'พนักงานตรวจสอบแสดงท่าทีไม่เหมาะสม',
-      category: IssueCategory.improperStaff,
-      createdAt: DateTime(2025, 3, 12, 11, 20),
-      status: StatusType.pending,
-      description: 'มีเจ้าหน้าที่ปฏิบัติงานไม่เหมาะสมที่ป่าตอง',
-      station: StationsModel(
-        name: 'Phuket Patong Beach',
-        latLng: LatLng(7.8966, 98.2956),
-      ),
-    ),
-    GeneralListsModel(
-      id: 5,
-      name: 'รถบรรทุกทำลายทางโบราณ',
-      category: IssueCategory.overWeight,
-      createdAt: DateTime(2025, 3, 10, 8, 30),
-      status: StatusType.approved,
-      description: 'มีการวิ่งรถบรรทุกขนาดใหญ่บริเวณอุทยานประวัติศาสตร์อยุธยา',
-      station: StationsModel(
-        name: 'Ayutthaya Historical Park',
-        latLng: LatLng(14.3559, 100.5660),
-      ),
-    ),
-    GeneralListsModel(
-      id: 6,
-      name: 'เจ้าหน้าที่เรียกรับผลประโยชน์',
-      category: IssueCategory.improperStaff,
-      createdAt: DateTime(2025, 3, 8, 13, 10),
-      status: StatusType.pending,
-      description: 'ร้องเรียนเจ้าหน้าที่ที่ศาลพระพรหมเอราวัณ',
-      station: StationsModel(
-        name: 'Erawan Shrine, Bangkok',
-        latLng: LatLng(13.7453, 100.5396),
-      ),
-    ),
-    GeneralListsModel(
-      id: 7,
-      name: 'พบรถน้ำหนักเกินเข้าไร่เลย์โดยไม่ได้รับอนุญาต',
-      category: IssueCategory.overWeight,
-      createdAt: DateTime(2025, 3, 6, 15, 25),
-      status: StatusType.approved,
-      description: 'รถบรรทุกใหญ่เข้าเขตไร่เลย์กระบี่',
-      station: StationsModel(
-        name: 'Railay Beach, Krabi',
-        latLng: LatLng(8.0117, 98.8373),
-      ),
-    ),
-    GeneralListsModel(
-      id: 8,
-      name: 'พฤติกรรมไม่เหมาะสมของเจ้าหน้าที่บนดอยอินทนนท์',
-      category: IssueCategory.improperStaff,
-      createdAt: DateTime(2025, 3, 3, 10, 05),
-      status: StatusType.rejected,
-      description: 'พบเจ้าหน้าที่ใช้น้ำเสียงรุนแรงกับนักท่องเที่ยว',
-      station: StationsModel(
-        name: 'Doi Inthanon, Chiang Mai',
-        latLng: LatLng(18.5883, 98.4878),
-      ),
-    ),
-    GeneralListsModel(
-      id: 9,
-      name: 'รถบรรทุกทำลายโบราณสถานสุโขทัย',
-      category: IssueCategory.overWeight,
-      createdAt: DateTime(2025, 3, 1, 17, 40),
-      status: StatusType.approved,
-      description: 'การเข้าออกของรถขนาดใหญ่กระทบต่อโบราณสถาน',
-      station: StationsModel(
-        name: 'Sukhothai Historical Park',
-        latLng: LatLng(17.0154, 99.8200),
-      ),
-    ),
-    GeneralListsModel(
-      id: 10,
-      name: 'ร้องเรียนเจ้าหน้าที่ที่ด่านเขาใหญ่',
-      category: IssueCategory.improperStaff,
-      createdAt: DateTime(2025, 2, 28, 12, 50),
-      status: StatusType.pending,
-      description: 'เจ้าหน้าที่ทำการตรวจไม่เป็นธรรมที่ด่านเข้าอุทยาน',
-      station: StationsModel(
-        name: 'Khao Yai National Park',
-        latLng: LatLng(14.4378, 101.3722),
-      ),
-    ),
-  ];
+  List<GeneralReportsModel> generalReportLists = [];
+
+  Future<void> fetchGeneralReports() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      generalReportLists = await _repository.getAll();
+    } catch (e) {
+      isLoading = false;
+      throw Exception("Fail to fetch get $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> createGeneralReports() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      if (generalName != '' &&
+          description != '' &&
+          category != null &&
+          station != null &&
+          image != null) {
+        final newGeneralReport = await _repository.create(
+          generalName,
+          description,
+          category!.toString(),
+          station!.toString(),
+          image!,
+          imageFileName!,
+        );
+        generalReportLists.add(newGeneralReport);
+      }
+      await fetchGeneralReports();
+    } catch (e) {
+      isLoading = false;
+      throw Exception("Fail to fetch create $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> deactivateGeneralReport(int reportId) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      final result = await _repository.deactivate(reportId);
+      final index = generalReportLists.indexWhere(
+        (item) => item.id == reportId,
+      );
+      if (index != -1) {
+        generalReportLists[index] = result;
+      }
+      await fetchGeneralReports();
+    } catch (e) {
+      isLoading = false;
+      throw Exception("Fail to fetch create $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateGeneralReport(int reportId) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      if (generalName != '' &&
+          description != '' &&
+          category != null &&
+          station != null &&
+          image != null &&
+          imageFileName != null) {
+        final result = await _repository.update(
+          reportId,
+          generalName,
+          description,
+          category.toString(),
+          station.toString(),
+          image,
+          imageFileName,
+        );
+        final index = generalReportLists.indexWhere(
+          (item) => item.id == reportId,
+        );
+        if (index != -1) {
+          generalReportLists[index] = result;
+        }
+        await fetchGeneralReports();
+      }
+    } catch (e) {
+      isLoading = false;
+      throw Exception("Fail to fetch create $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 
   void updateField(String field, dynamic value) {
     if (field == 'generalName') {
       generalName = value;
+    }
+    if (field == 'imageFileName') {
+      imageFileName = value;
     }
     if (field == 'description') {
       description = value;
@@ -151,7 +138,47 @@ class GeneralListsController extends ChangeNotifier {
     if (field == 'image') {
       image = value;
     }
-    print("name: $generalName");
+    notifyListeners();
+  }
+
+  Future<Uint8List> _loadImageFromImageNetwork() async {
+    final response = await http.get(Uri.parse(imageFileName!));
+    return response.bodyBytes;
+  }
+
+  Future<void> loadImageFileName() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      image = await _loadImageFromImageNetwork();
+      notifyListeners();
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      throw Exception("Fail to load image $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void updateAllField(GeneralReportsModel model) {
+    generalName = model.name;
+    imageFileName = model.imageUrl;
+    description = model.description;
+    category = model.category;
+    station = model.station.id;
+    reportId = model.id;
+    notifyListeners();
+  }
+
+  void resetAllField() {
+    generalName = '';
+    imageFileName = null;
+    description = '';
+    category = null;
+    station = null;
+    reportId = null;
     notifyListeners();
   }
 
@@ -199,8 +226,9 @@ class GeneralListsController extends ChangeNotifier {
     if (pickFile != null) {
       if (kIsWeb) {
         Uint8List imageBytes = await pickFile.readAsBytes();
+        String imageName = pickFile.name;
         updateField('image', imageBytes);
-        print("Image: $image");
+        updateField("imageFileName", imageName);
       }
     } else {
       print("No Image at all");
@@ -209,6 +237,7 @@ class GeneralListsController extends ChangeNotifier {
 
   void clearImage() {
     image = null;
+    imageFileName = null;
     notifyListeners();
   }
 
@@ -219,12 +248,14 @@ class GeneralListsController extends ChangeNotifier {
 
   int currentPage = 0;
   int itemsPerPage = 5;
-  List<GeneralListsModel> getPaginatedGeneralLists() {
+  List<GeneralReportsModel> getPaginatedGeneralLists() {
+    List<GeneralReportsModel> activeGeneralLists =
+        generalReportLists.where((item) => item.isActive).toList();
     int startIndex = currentPage * itemsPerPage;
     int endIndex = startIndex + itemsPerPage;
-    return generalReportLists.sublist(
+    return activeGeneralLists.sublist(
       startIndex,
-      endIndex.clamp(0, generalReportLists.length),
+      endIndex.clamp(0, activeGeneralLists.length),
     );
   }
 }

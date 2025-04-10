@@ -10,9 +10,11 @@ class HomeMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sortedStations = List.of(stationsController.stationLists);
+    final sortedStations = List.of(stationsController.stations);
     final selectedStations = sortedStations.indexWhere(
-      (station) => station.latLng == stationsController.currentLocation,
+      (station) =>
+          station.lat == stationsController.currentLocation.latitude &&
+          station.long == stationsController.currentLocation.longitude,
     );
     if (selectedStations != -1) {
       final currentStation = sortedStations.removeAt(selectedStations);
@@ -55,17 +57,16 @@ class HomeMap extends StatelessWidget {
                 zoom: 13,
               ),
               markers:
-                  stationsController.stationLists.asMap().entries.map((
-                    entries,
-                  ) {
+                  stationsController.stations.asMap().entries.map((entries) {
                     return Marker(
                       onTap:
                           () => stationsController.cameraToPosition(
-                            entries.value.latLng,
+                            entries.value.lat,
+                            entries.value.long,
                           ),
                       markerId: MarkerId(entries.key.toString()),
                       icon: BitmapDescriptor.defaultMarker,
-                      position: entries.value.latLng,
+                      position: LatLng(entries.value.lat, entries.value.long),
                       infoWindow: InfoWindow(title: entries.value.name),
                     );
                   }).toSet(),
@@ -87,12 +88,20 @@ class HomeMap extends StatelessWidget {
                     return OutlinedButton(
                       style: ButtonStyle(
                         backgroundColor:
-                            stationsController.currentLocation == item.latLng
+                            stationsController.currentLocation.latitude ==
+                                        item.lat &&
+                                    stationsController
+                                            .currentLocation
+                                            .longitude ==
+                                        item.long
                                 ? WidgetStatePropertyAll(AppColors.blackPure)
                                 : WidgetStatePropertyAll(Colors.transparent),
                       ),
                       onPressed: () {
-                        stationsController.cameraToPosition(item.latLng);
+                        stationsController.cameraToPosition(
+                          item.lat,
+                          item.long,
+                        );
                       },
                       child: Text(
                         item.name,

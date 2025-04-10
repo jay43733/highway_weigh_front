@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:highway_weight/models/stations_model.dart';
+import 'package:highway_weight/models/users_model.dart';
 import 'package:highway_weight/styles/colors.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'general_lists_model.g.dart';
 
 class IssueCategory {
   static const int overWeight = 1;
@@ -9,7 +13,7 @@ class IssueCategory {
   static String getTitle(int type) {
     switch (type) {
       case 1:
-        return "ร้องเรียนรถบรรทุกน้ำหนักเกิน";
+        return "รถบรรทุกน้ำหนักเกิน";
       case 2:
         return "ร้องเรียนเจ้าหน้าที่";
       default:
@@ -50,22 +54,61 @@ class StatusType {
   }
 }
 
-class GeneralListsModel {
+@JsonSerializable()
+class GeneralReportsModel {
+  @JsonKey(name: 'id')
   final int id;
+
+  // @JsonKey(name: "who_created")
+  // final UsersModel? whoCreated;
+
+  @JsonKey(name: "name")
   final String name;
+
+  @JsonKey(name: "issue_type")
   final int category;
+
+  @JsonKey(name: 'created_at')
   final DateTime createdAt;
+
+  @JsonKey(name: 'edited_at')
+  final DateTime? updatedAt;
+
+  @JsonKey(name: 'status')
   final int status;
+
+  @JsonKey(name: 'station')
   final StationsModel station;
+
+  @JsonKey(name: 'detail')
   final String description;
 
-  GeneralListsModel({
+  @JsonKey(name: "image")
+  final String? image;
+
+  @JsonKey(name: 'imageUrl')
+  final String imageUrl;
+
+  @JsonKey(name: 'is_active')
+  final bool isActive;
+
+  GeneralReportsModel({
     required this.id,
+    // this.whoCreated,
     required this.name,
     required this.category,
     required this.createdAt,
     required this.description,
     required this.status,
     required this.station,
+    required this.isActive,
+    this.updatedAt,
+    this.image,
+    required this.imageUrl,
   });
+
+  factory GeneralReportsModel.fromJson(Map<String, dynamic> json) =>
+      _$GeneralReportsModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GeneralReportsModelToJson(this);
 }

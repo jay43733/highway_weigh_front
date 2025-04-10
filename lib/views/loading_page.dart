@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:highway_weight/controllers/auth_controller.dart';
 import 'package:highway_weight/services/navigation_service.dart';
 import 'package:highway_weight/styles/colors.dart';
+import 'package:provider/provider.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -11,13 +14,33 @@ class LoadingPage extends StatefulWidget {
 }
 
 class _LoadingPageState extends State<LoadingPage> {
+  final storage = FlutterSecureStorage();
+
   @override
   void initState() {
     super.initState();
     _redirectedToLastPath();
   }
 
+  Future<void> _checkRole() async {
+    if (mounted) {
+      final authController = Provider.of<AuthController>(
+        context,
+        listen: false,
+      );
+      final role = await storage.read(key: 'role');
+      final name = await storage.read(key: 'name');
+      if (role != null) {
+        authController.getStorage('role', role);
+      }
+      if (name != null) {
+        authController.getStorage('user', name);
+      }
+    }
+  }
+
   Future<void> _redirectedToLastPath() async {
+    await _checkRole();
     await Future.delayed(const Duration(milliseconds: 200));
 
     if (mounted) {

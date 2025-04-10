@@ -1,0 +1,79 @@
+import 'dart:typed_data';
+
+import 'package:highway_weight/models/general_lists_model.dart';
+import 'package:highway_weight/services/general_report_service.dart';
+
+class GeneralReportRepository {
+  final GeneralReportService _service = GeneralReportService();
+
+  Future<List<GeneralReportsModel>> getAll() async {
+    try {
+      final jsonData = await _service.getAllGeneralReports();
+      final result =
+          jsonData.map((json) => GeneralReportsModel.fromJson(json)).toList();
+      return result;
+    } catch (e) {
+      throw Exception("Failed to fetch $e");
+    }
+  }
+
+  Future<GeneralReportsModel> create(
+    String name,
+    String detail,
+    String issueType,
+    String stationId,
+    Uint8List image,
+    String imageFileName,
+  ) async {
+    try {
+      final jsonData = await _service.createGeneralReport(
+        name,
+        detail,
+        issueType,
+        stationId,
+        image,
+        imageFileName,
+      );
+      final result = GeneralReportsModel.fromJson(jsonData);
+      return result;
+    } catch (e) {
+      throw Exception("Failed to fetch $e");
+    }
+  }
+
+  Future<GeneralReportsModel> deactivate(int reportId) async {
+    try {
+      final jsonData = await _service.deactivateGeneralReport(reportId);
+      final result = GeneralReportsModel.fromJson(jsonData);
+      return result;
+    } catch (e) {
+      throw Exception("Failed to fetch $e");
+    }
+  }
+
+  Future<GeneralReportsModel> update(
+    int reportId,
+    String name,
+    String detail,
+    String issueType,
+    String stationId,
+    Uint8List? image,
+    String? imageFileName,
+  ) async {
+    try {
+      final jsonData = await _service.updateGeneralReport(
+        reportId,
+        name,
+        detail,
+        issueType,
+        stationId,
+        image,
+        imageFileName,
+      );
+      final result = GeneralReportsModel.fromJson(jsonData);
+      return result;
+    } catch (e) {
+      throw Exception("Failed to fetch $e");
+    }
+  }
+}

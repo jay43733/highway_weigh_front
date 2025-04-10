@@ -5,16 +5,20 @@ import 'package:highway_weight/styles/colors.dart';
 
 class CustomAnimatedContainer extends StatelessWidget {
   final Uint8List? imagePath;
+  final String? imageUrl;
   final Function() onPressed;
-  
+
   const CustomAnimatedContainer({
     super.key,
     this.imagePath,
     required this.onPressed,
+    this.imageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
+    print("Url: $imageUrl");
+    // print("Image: $imagePath");
     return Stack(
       children: [
         DottedBorder(
@@ -33,11 +37,18 @@ class CustomAnimatedContainer extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
               ),
-              child: Image.memory(
-                imagePath!,
-                filterQuality: FilterQuality.high,
-                fit: BoxFit.fitHeight,
-              ),
+              child:
+                  imagePath != null
+                      ? Image.memory(
+                        imagePath!,
+                        filterQuality: FilterQuality.high,
+                        fit: BoxFit.fitHeight,
+                      )
+                      : Image.network(
+                        imageUrl!,
+                        filterQuality: FilterQuality.high,
+                        fit: BoxFit.cover,
+                      ),
             ),
           ),
         ),

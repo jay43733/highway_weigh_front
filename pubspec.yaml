@@ -28,6 +28,11 @@ dependencies:
   number_pagination: ^1.1.6
   provider: ^6.1.4
   shared_preferences: ^2.5.3
+  json_annotation: ^4.9.0
+  flutter_secure_local_storage: ^0.0.2
+  path: ^1.9.1
+  mime: ^2.0.0
+  http_parser: ^4.1.2
 
 dev_dependencies:
   build_runner: ^2.4.15

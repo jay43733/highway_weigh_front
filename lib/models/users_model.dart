@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+// dart run build_runner watch --delete-conflicting-outputs
+part 'users_model.g.dart';
+
 class UserRole {
   static int director = 1;
   static int headStations = 2;
@@ -21,20 +25,29 @@ class UserRole {
   }
 }
 
+@JsonSerializable()
 class UsersModel {
+  @JsonKey(name: 'user_id')
   final int id;
+  @JsonKey(name: 'name')
   final String name;
-  final String email;
-  final String password;
-  final String phoneNumber;
+  final String? email;
+  final String? password;
+  final String? phoneNumber;
+  @JsonKey(name: 'role')
   final int role;
 
   UsersModel({
     required this.id,
     required this.name,
-    required this.email,
-    required this.password,
-    required this.phoneNumber,
+    this.email,
+    this.password,
+    this.phoneNumber,
     required this.role,
   });
+
+
+  factory UsersModel.fromJson(Map<String, dynamic> json)=> _$UsersModelFromJson(json);
+
+  Map<String, dynamic> toJson()=> _$UsersModelToJson(this);
 }

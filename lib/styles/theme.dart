@@ -67,7 +67,7 @@ class AppTheme {
           backgroundColor: WidgetStatePropertyAll(AppColors.brandSecondary),
           shadowColor: WidgetStatePropertyAll(AppColors.whitePrimary),
           mouseCursor: WidgetStatePropertyAll(SystemMouseCursors.click),
-          textStyle: WidgetStatePropertyAll(TextStyles.labelReg),
+          textStyle: WidgetStatePropertyAll(TextStyles.ctaBodyReg),
           shape: WidgetStatePropertyAll(
             ContinuousRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
@@ -98,6 +98,7 @@ class AppTheme {
   );
 
   static final PopupMenuThemeData _popupMenuThemeData = PopupMenuThemeData(
+    iconColor: AppColors.blackPrimary,
     color: AppColors.blackPrimary,
     elevation: 4.0,
     labelTextStyle: WidgetStatePropertyAll(

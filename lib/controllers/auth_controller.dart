@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:highway_weight/controllers/users_controller.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:highway_weight/repositories/auth_repository.dart';
 
 class AuthController extends ChangeNotifier {
-  final UsersController usersController;
-  AuthController({required this.usersController});
+  final AuthRepository _authRepos = AuthRepository();
+  final storage = FlutterSecureStorage();
+
+  bool _isLoading = false;
+  String? _user;
+  String? role;
+  bool get isLoading => _isLoading;
+  String? get user => _user;
   bool showPassword = false;
   String username = '';
   String email = '';
@@ -46,27 +53,47 @@ class AuthController extends ChangeNotifier {
     return null;
   }
 
-  bool checkEmailPassword() {
-    if (email.trim() != '' && password.trim() != '') {
-      final isEmailPasswordValid = usersController.users.where(
-        (item) => item.email == email && item.password == password,
-      );
-      if (isEmailPasswordValid.isNotEmpty) {
-        final selectedName = isEmailPasswordValid.single.name;
-        print(selectedName);
-        username = selectedName;
-        alertMessage = 'Welcome to Highway Weigh !';
-        notifyListeners();
-        return true;
-      } else {
-        alertMessage = 'Email and Password are invalid';
-        notifyListeners();
-        return false;
-      }
-    } else {
-      alertMessage = 'Please complete email and password before login';
+  Future<void> login(String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await _authRepos.login(email, password);
+      _user = response.name;
+      role = response.role.toString();
+      alertMessage = 'Welcome to Highway Weigh !';
+      _isLoading = false;
       notifyListeners();
-      return false;
+    } catch (e) {
+      print("Login errorrrrr $e");
+      String errorMsg = e.toString();
+      if (errorMsg.contains('Message:')) {
+        alertMessage = errorMsg.split("Message:").last.trim();
+      } else {
+        alertMessage = "Login failed. Please try again.";
+      }
+      print(alertMessage);
+      _isLoading = false;
+      notifyListeners();
     }
+  }
+
+  String? getStorage(String field, String data) {
+    if (field == "role") {
+      role = data;
+    }
+    if (field == "user") {
+      _user = data;
+    }
+    notifyListeners();
+    return null;
+  }
+
+  Future<void> logout() async {
+    _isLoading = true;
+    _user = '';
+    role = '';
+    await storage.deleteAll();
+    notifyListeners();
   }
 }

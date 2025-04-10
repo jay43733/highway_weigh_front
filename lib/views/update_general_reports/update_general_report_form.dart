@@ -14,15 +14,29 @@ import 'package:highway_weight/widgets/primary_button.dart';
 import 'package:highway_weight/widgets/secondary_button.dart';
 import 'package:provider/provider.dart';
 
-class GeneralReportForm extends StatelessWidget {
+class UpdateGeneralReportForm extends StatefulWidget {
   final GeneralReportsController generalReportsController;
   final StationsController stationsController;
 
-  const GeneralReportForm({
+  const UpdateGeneralReportForm({
     super.key,
     required this.generalReportsController,
     required this.stationsController,
   });
+
+  @override
+  State<UpdateGeneralReportForm> createState() =>
+      _UpdateGeneralReportFormState();
+}
+
+class _UpdateGeneralReportFormState extends State<UpdateGeneralReportForm> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      widget.generalReportsController.loadImageFileName();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +47,16 @@ class GeneralReportForm extends StatelessWidget {
     ];
 
     List<int> stationOptions =
-        stationsController.stations
+        widget.stationsController.stations
             .asMap()
             .entries
             .map((entries) => entries.value.id)
             .toList();
 
-    if (generalReportsController.isLoading) {
-      return const Loading();
-    }
-
     return Column(
       children: [
         Text(
-          "Create General Report",
+          "Edit General Report",
           style: TextStyles.h3Semi.copyWith(color: AppColors.whitePrimary),
         ),
         SizedBox(height: 24.0),
@@ -70,24 +80,24 @@ class GeneralReportForm extends StatelessWidget {
                       Text("รายละเอียดการร้องเรียน", style: TextStyles.h4Semi),
                       SizedBox(height: 20.0),
                       CustomTextFormField(
+                        initialValue:
+                            widget.generalReportsController.generalName,
                         labelText: "ชื่อหัวข้อ",
                         onChanged: (value) {
-                          generalReportsController.updateField(
+                          widget.generalReportsController.updateField(
                             "generalName",
                             value,
                           );
                         },
                         validator:
-                            (value) => generalReportsController.validateField(
-                              'generalName',
-                              value,
-                            ),
+                            (value) => widget.generalReportsController
+                                .validateField('generalName', value),
                       ),
                       SizedBox(height: 20.0),
                       CustomDropDownTextFormField(
-                        value: generalReportsController.category,
+                        value: widget.generalReportsController.category,
                         onChanged: (value) {
-                          generalReportsController.updateField(
+                          widget.generalReportsController.updateField(
                             'category',
                             value,
                           );
@@ -96,27 +106,25 @@ class GeneralReportForm extends StatelessWidget {
                         dropdownItems: categoryOptions,
                         itemLabelBuilder: IssueCategory.getTitle,
                         validator:
-                            (value) => generalReportsController.validateField(
-                              "category",
-                              value,
-                            ),
+                            (value) => widget.generalReportsController
+                                .validateField("category", value),
                       ),
                       SizedBox(height: 20.0),
                       CustomTextFormField(
+                        initialValue:
+                            widget.generalReportsController.description,
                         labelText: "หมายเหตุ",
                         hintText: "อธิบายรายละเอียดเพิ่มเติม...",
                         onChanged: (value) {
-                          generalReportsController.updateField(
+                          widget.generalReportsController.updateField(
                             "description",
                             value,
                           );
                         },
                         maxLines: 4,
                         validator:
-                            (value) => generalReportsController.validateField(
-                              "description",
-                              value,
-                            ),
+                            (value) => widget.generalReportsController
+                                .validateField("description", value),
                       ),
                     ],
                   ),
@@ -128,39 +136,42 @@ class GeneralReportForm extends StatelessWidget {
                       Text("สถานีที่ร้องเรียน", style: TextStyles.h4Semi),
                       SizedBox(height: 20.0),
                       CustomDropDownTextFormField(
-                        value: generalReportsController.station,
+                        value: widget.generalReportsController.station,
                         onChanged: (value) {
-                          generalReportsController.updateField(
+                          widget.generalReportsController.updateField(
                             'station',
                             value,
                           );
                         },
                         hintText: "สถานี",
                         dropdownItems: stationOptions,
-                        itemLabelBuilder: stationsController.getStationName,
+                        itemLabelBuilder:
+                            widget.stationsController.getStationName,
                         validator:
-                            (value) => generalReportsController.validateField(
-                              "station",
-                              value,
-                            ),
+                            (value) => widget.generalReportsController
+                                .validateField("station", value),
                       ),
                       SizedBox(height: 40.0),
                       Text("แนบหลักฐานประกอบ", style: TextStyles.h4Semi),
                       SizedBox(height: 20.0),
                       Consumer<GeneralReportsController>(
                         builder: (context, value, _) {
-                          return generalReportsController.image == null
+                          return widget
+                                      .generalReportsController
+                                      .imageFileName ==
+                                  null
                               ? Column(
                                 children: [
                                   CustomDottedContainer(
                                     imagePath: 'assets/icons/upload.png',
                                     onPressed: () {
-                                      generalReportsController
+                                      widget.generalReportsController
                                           .getImageGallery();
                                     },
                                     buttonName: 'Upload Image',
                                   ),
-                                  if (generalReportsController
+                                  if (widget
+                                          .generalReportsController
                                           .errorMessage['image'] !=
                                       null)
                                     Padding(
@@ -168,7 +179,8 @@ class GeneralReportForm extends StatelessWidget {
                                         vertical: 8.0,
                                       ),
                                       child: Text(
-                                        generalReportsController
+                                        widget
+                                            .generalReportsController
                                             .errorMessage['image']
                                             .toString(),
                                         style: TextStyles.labelReg.copyWith(
@@ -179,8 +191,14 @@ class GeneralReportForm extends StatelessWidget {
                                 ],
                               )
                               : CustomAnimatedContainer(
-                                imagePath: generalReportsController.image,
-                                onPressed: generalReportsController.clearImage,
+                                imagePath:
+                                    widget.generalReportsController.image,
+                                imageUrl:
+                                    widget
+                                        .generalReportsController
+                                        .imageFileName,
+                                onPressed:
+                                    widget.generalReportsController.clearImage,
                               );
                         },
                       ),
@@ -194,27 +212,34 @@ class GeneralReportForm extends StatelessWidget {
                             onPressed: () {
                               if (_formKey.currentState != null) {
                                 _formKey.currentState!.reset();
-                                generalReportsController.clearImage();
+                                widget.generalReportsController.resetAllField();
+                                widget.generalReportsController.clearImage();
                               }
                               context.pop();
                             },
                           ),
                           SizedBox(width: 32.0),
                           PrimaryButton(
-                            text: "สร้างข้อร้องเรียน",
+                            text: "แก้ไขข้อร้องเรียน",
                             onPressed: () async {
-                              generalReportsController.validateImage();
+                              widget.generalReportsController.validateImage();
                               if (_formKey.currentState!.validate() &&
-                                  !generalReportsController.errorMessage
+                                  !widget.generalReportsController.errorMessage
                                       .containsKey('image')) {
-                                await generalReportsController
-                                    .createGeneralReports();
+                                print(
+                                  "Idddddddddddd : ${widget.generalReportsController.reportId}",
+                                );
+                                await widget.generalReportsController
+                                    .updateGeneralReport(
+                                      widget.generalReportsController.reportId!,
+                                    );
                                 _formKey.currentState!.reset();
-                                generalReportsController.clearImage();
+                                widget.generalReportsController.resetAllField();
+                                widget.generalReportsController.clearImage();
                                 context.pop();
                               } else {
                                 print(
-                                  "Error : ${generalReportsController.errorMessage['image']}",
+                                  "Error : ${widget.generalReportsController.errorMessage['image']}",
                                 );
                               }
                             },

@@ -116,22 +116,26 @@ class LoginPage extends StatelessWidget {
                       ),
                       SizedBox(height: 24.0),
                       PrimaryButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            if (authController.checkEmailPassword()) {
+                            await authController.login(
+                              authController.email,
+                              authController.password,
+                            );
+                            if (authController.user != null) {
                               SuccessSnackBar.show(
                                 context,
                                 title: authController.alertMessage,
-                                subtitle: authController.email
+                                subtitle: authController.user,
                               );
                               context.go('/home');
-                              _formKey.currentState!.reset();
                             } else {
                               ErrorSnackBar.show(
                                 context,
                                 title: authController.alertMessage,
                               );
+                              print("Login Failed");
                             }
                           }
                         },

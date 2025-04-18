@@ -9,9 +9,10 @@ import 'package:highway_weight/widgets/custom_animated_container.dart';
 import 'package:highway_weight/widgets/custom_dotted_container.dart';
 import 'package:highway_weight/widgets/custom_drop_down_text_form_field.dart';
 import 'package:highway_weight/widgets/custom_text_form_field.dart';
-import 'package:highway_weight/widgets/loading.dart';
+import 'package:highway_weight/widgets/error_snack_bar.dart';
 import 'package:highway_weight/widgets/primary_button.dart';
 import 'package:highway_weight/widgets/secondary_button.dart';
+import 'package:highway_weight/widgets/success_snack_bar.dart';
 import 'package:provider/provider.dart';
 
 class UpdateGeneralReportForm extends StatefulWidget {
@@ -226,18 +227,23 @@ class _UpdateGeneralReportFormState extends State<UpdateGeneralReportForm> {
                               if (_formKey.currentState!.validate() &&
                                   !widget.generalReportsController.errorMessage
                                       .containsKey('image')) {
-                                print(
-                                  "Idddddddddddd : ${widget.generalReportsController.reportId}",
-                                );
                                 await widget.generalReportsController
                                     .updateGeneralReport(
                                       widget.generalReportsController.reportId!,
                                     );
+                                SuccessSnackBar.show(
+                                  context,
+                                  title: "Updated successfully",
+                                  subtitle:
+                                      widget.stationsController.getStationName(widget.generalReportsController.station!),
+                                );
+
                                 _formKey.currentState!.reset();
                                 widget.generalReportsController.resetAllField();
                                 widget.generalReportsController.clearImage();
                                 context.pop();
                               } else {
+                                ErrorSnackBar.show(context, title: "Error");
                                 print(
                                   "Error : ${widget.generalReportsController.errorMessage['image']}",
                                 );

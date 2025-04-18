@@ -8,6 +8,8 @@ class AuthController extends ChangeNotifier {
 
   bool _isLoading = false;
   String? _user;
+  String? _id;
+  String? get id => _id;
   String? role;
   bool get isLoading => _isLoading;
   String? get user => _user;
@@ -60,19 +62,18 @@ class AuthController extends ChangeNotifier {
     try {
       final response = await _authRepos.login(email, password);
       _user = response.name;
+      _id = response.id.toString();
       role = response.role.toString();
       alertMessage = 'Welcome to Highway Weigh !';
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      print("Login errorrrrr $e");
       String errorMsg = e.toString();
       if (errorMsg.contains('Message:')) {
         alertMessage = errorMsg.split("Message:").last.trim();
       } else {
         alertMessage = "Login failed. Please try again.";
       }
-      print(alertMessage);
       _isLoading = false;
       notifyListeners();
     }
@@ -84,6 +85,9 @@ class AuthController extends ChangeNotifier {
     }
     if (field == "user") {
       _user = data;
+    }
+    if (field == "id") {
+      _id = data;
     }
     notifyListeners();
     return null;

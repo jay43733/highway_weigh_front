@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:highway_weight/models/general_lists_model.dart';
@@ -10,6 +9,7 @@ class GeneralReportsController extends ChangeNotifier {
   bool isLoading = false;
   String generalName = '';
   String description = '';
+  String comment = '';
   int? category;
   int? station;
   Uint8List? image;
@@ -135,6 +135,9 @@ class GeneralReportsController extends ChangeNotifier {
     if (field == 'station') {
       station = value;
     }
+    if (field == 'comment') {
+      comment = value;
+    }
     if (field == 'image') {
       image = value;
     }
@@ -176,6 +179,7 @@ class GeneralReportsController extends ChangeNotifier {
     generalName = '';
     imageFileName = null;
     description = '';
+    comment = '';
     category = null;
     station = null;
     reportId = null;
@@ -201,6 +205,11 @@ class GeneralReportsController extends ChangeNotifier {
     if (field == 'station') {
       if (value == null) {
         return "Please choose a station.";
+      }
+    }
+    if (field == 'comment') {
+      if (value == '') {
+        return "Please fill your comment ";
       }
     }
     return null;
@@ -248,14 +257,29 @@ class GeneralReportsController extends ChangeNotifier {
 
   int currentPage = 0;
   int itemsPerPage = 5;
-  List<GeneralReportsModel> getPaginatedGeneralLists() {
-    List<GeneralReportsModel> activeGeneralLists =
-        generalReportLists.where((item) => item.isActive).toList();
-    int startIndex = currentPage * itemsPerPage;
-    int endIndex = startIndex + itemsPerPage;
-    return activeGeneralLists.sublist(
-      startIndex,
-      endIndex.clamp(0, activeGeneralLists.length),
-    );
+  List<GeneralReportsModel> getPaginatedGeneralLists(String? id) {
+    if (id != null) {
+      List<GeneralReportsModel> activeGeneralLists =
+          generalReportLists.where((item) => item.isActive).toList()..sort(
+            (a, b) =>
+                (b.whoCreated?.id.toString() == id ? 1 : 0) -
+                (a.whoCreated?.id.toString() == id ? 1 : 0),
+          );
+      int startIndex = currentPage * itemsPerPage;
+      int endIndex = startIndex + itemsPerPage;
+      return activeGeneralLists.sublist(
+        startIndex,
+        endIndex.clamp(0, activeGeneralLists.length),
+      );
+    } else {
+      List<GeneralReportsModel> activeGeneralLists =
+          generalReportLists.where((item) => item.isActive).toList();
+      int startIndex = currentPage * itemsPerPage;
+      int endIndex = startIndex + itemsPerPage;
+      return activeGeneralLists.sublist(
+        startIndex,
+        endIndex.clamp(0, activeGeneralLists.length),
+      );
+    }
   }
 }

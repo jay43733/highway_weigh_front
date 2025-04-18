@@ -27,7 +27,7 @@ class UserRole {
 
 @JsonSerializable()
 class UsersModel {
-  @JsonKey(name: 'user_id')
+  @JsonKey(name: 'id')
   final int id;
   @JsonKey(name: 'name')
   final String name;
@@ -46,8 +46,8 @@ class UsersModel {
     required this.role,
   });
 
+  factory UsersModel.fromJson(Map<String, dynamic> json) =>
+      _$UsersModelFromJson(json);
 
-  factory UsersModel.fromJson(Map<String, dynamic> json)=> _$UsersModelFromJson(json);
-
-  Map<String, dynamic> toJson()=> _$UsersModelToJson(this);
+  Map<String, dynamic> toJson() => _$UsersModelToJson(this);
 }

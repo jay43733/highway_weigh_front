@@ -30,11 +30,15 @@ class _LoadingPageState extends State<LoadingPage> {
       );
       final role = await storage.read(key: 'role');
       final name = await storage.read(key: 'name');
+      final id = await storage.read(key: 'userId');
       if (role != null) {
         authController.getStorage('role', role);
       }
       if (name != null) {
         authController.getStorage('user', name);
+      }
+      if (id != null) {
+        authController.getStorage('id', id);
       }
     }
   }

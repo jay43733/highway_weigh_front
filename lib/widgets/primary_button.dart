@@ -19,10 +19,10 @@ class PrimaryButton extends StatelessWidget {
       style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(color)),
       onPressed: onPressed,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (icon != null) Icon(icon, size: 22.0,),
+          if (icon != null) Icon(icon, size: 20.0,),
           SizedBox(width: 4.0),
           Text(text),
         ],

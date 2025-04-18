@@ -17,6 +17,7 @@ class AuthRepository {
         await storage.write(key: 'accessToken', value: token);
         await storage.write(key: 'role', value: payload['role'].toString());
         await storage.write(key: 'name', value: payload['name']);
+        await storage.write(key: 'userId', value: payload['id'].toString());
       }
 
       if (response.containsKey('payload')) {

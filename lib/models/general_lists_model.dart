@@ -59,8 +59,8 @@ class GeneralReportsModel {
   @JsonKey(name: 'id')
   final int id;
 
-  // @JsonKey(name: "who_created")
-  // final UsersModel? whoCreated;
+  @JsonKey(name: "who_created",includeIfNull: true)
+  final UsersModel? whoCreated;
 
   @JsonKey(name: "name")
   final String name;
@@ -86,6 +86,9 @@ class GeneralReportsModel {
   @JsonKey(name: "image")
   final String? image;
 
+  @JsonKey(name: "comment")
+  final String? comment;
+
   @JsonKey(name: 'imageUrl')
   final String imageUrl;
 
@@ -94,7 +97,7 @@ class GeneralReportsModel {
 
   GeneralReportsModel({
     required this.id,
-    // this.whoCreated,
+    required this.whoCreated,
     required this.name,
     required this.category,
     required this.createdAt,
@@ -105,6 +108,7 @@ class GeneralReportsModel {
     this.updatedAt,
     this.image,
     required this.imageUrl,
+    this.comment,
   });
 
   factory GeneralReportsModel.fromJson(Map<String, dynamic> json) =>

@@ -16,46 +16,59 @@ class UpdateGeneralReportsPage extends StatelessWidget {
       context,
       listen: false,
     );
-    print("Loading ... ${generalReportsController.isLoading}");
-    final stationsController = Provider.of<StationsController>(context);
-
-    if (generalReportsController.isLoading) {
-      return const Loading();
-    }
+    final stationsController = Provider.of<StationsController>(
+      context,
+      listen: false,
+    );
 
     return Scaffold(
-      body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.blackPrimary,
-            image: DecorationImage(
-              image: AssetImage('assets/images/traffic1.jpg'),
-              colorFilter: ColorFilter.mode(
-                Colors.black.withValues(alpha: 0.7),
-                BlendMode.darken,
-              ),
-              filterQuality: FilterQuality.high,
-              opacity: 0.8,
-              fit: BoxFit.cover,
-            ),
-          ),
-          height: 1000,
-          child: ListView(
+      body: Stack(
+        children: [
+          ListView(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 20.0,
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.blackPrimary,
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/traffic1.jpg'),
+                    colorFilter: ColorFilter.mode(
+                      Colors.black54,
+                      BlendMode.darken,
+                    ),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                child: CustomAppBar(),
-              ),
-              UpdateGeneralReportForm(
-                generalReportsController: generalReportsController,
-                stationsController: stationsController,
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 20,
+                      ),
+                      child: CustomAppBar(),
+                    ),
+                    UpdateGeneralReportForm(
+                      generalReportsController: generalReportsController,
+                      stationsController: stationsController,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
+
+          Selector<GeneralReportsController, bool>(
+            selector: (_, controller) => controller.isLoading,
+            builder: (_, isLoading, __) {
+              if (!isLoading) return const SizedBox.shrink();
+
+              return Container(
+                color: Colors.black.withValues(alpha: 0.4),
+                child: const Center(child: Loading()),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

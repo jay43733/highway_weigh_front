@@ -12,6 +12,7 @@ class CustomTextFormField extends StatelessWidget {
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
   final int? maxLines;
+  final bool? enabled;
 
   const CustomTextFormField({
     super.key,
@@ -24,6 +25,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.maxLines,
     this.initialValue,
+    this.enabled = true,
   });
 
   @override
@@ -35,10 +37,22 @@ class CustomTextFormField extends StatelessWidget {
       autocorrect: true,
       onChanged: onChanged,
       obscureText: obscureText ?? false,
+      enabled: enabled ?? true,
       validator: validator,
-      style: TextStyles.labelSemi,
+      style:
+          enabled == true
+              ? TextStyles.labelSemi
+              : TextStyles.labelSemi.copyWith(color: AppColors.greyPrimary),
       decoration: InputDecoration(
-        label: Text(labelText),
+        label: Text(
+          labelText,
+          style:
+              enabled == true
+                  ? TextStyles.bodyReg.copyWith(color: AppColors.blackPure)
+                  : TextStyles.bodyReg.copyWith(
+                    color: AppColors.blackPlaceholder,
+                  ),
+        ),
         hintText: hintText,
         suffixIcon: IconButton(
           onPressed: onSuffixPressed,

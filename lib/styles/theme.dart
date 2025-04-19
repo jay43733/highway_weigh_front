@@ -92,7 +92,6 @@ class AppTheme {
     style: ButtonStyle(
       textStyle: WidgetStatePropertyAll(TextStyles.labelReg),
       foregroundColor: WidgetStatePropertyAll(AppColors.blackPrimary),
-      overlayColor: WidgetStatePropertyAll(AppColors.blackPure),
       animationDuration: const Duration(milliseconds: 300),
     ),
   );
@@ -147,6 +146,12 @@ class AppTheme {
     textStyle: TextStyles.bodyReg.copyWith(color: AppColors.whitePrimary),
   );
 
+  static final TextSelectionThemeData _textSelectionThemeData =
+      TextSelectionThemeData(
+        cursorColor: AppColors.brandSecondary,
+        selectionColor: AppColors.greyPrimary,
+      );
+
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
@@ -162,6 +167,7 @@ class AppTheme {
     outlinedButtonTheme: _outlinedButtonThemeData,
     dropdownMenuTheme: _dropdownMenuThemeData,
     dialogTheme: _dialogThemeData,
+    textSelectionTheme: _textSelectionThemeData,
     snackBarTheme: _snackBarThemeData,
     fontFamily: 'IBMPlexSansThai',
   );

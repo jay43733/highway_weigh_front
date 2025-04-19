@@ -9,9 +9,11 @@ import 'package:highway_weight/widgets/custom_animated_container.dart';
 import 'package:highway_weight/widgets/custom_dotted_container.dart';
 import 'package:highway_weight/widgets/custom_drop_down_text_form_field.dart';
 import 'package:highway_weight/widgets/custom_text_form_field.dart';
+import 'package:highway_weight/widgets/error_snack_bar.dart';
 import 'package:highway_weight/widgets/loading.dart';
 import 'package:highway_weight/widgets/primary_button.dart';
 import 'package:highway_weight/widgets/secondary_button.dart';
+import 'package:highway_weight/widgets/success_snack_bar.dart';
 import 'package:provider/provider.dart';
 
 class GeneralReportForm extends StatelessWidget {
@@ -209,12 +211,20 @@ class GeneralReportForm extends StatelessWidget {
                                       .containsKey('image')) {
                                 await generalReportsController
                                     .createGeneralReports();
+                                SuccessSnackBar.show(
+                                  title: "Created new report Successfully",
+                                  subtitle:
+                                      "at ${stationsController.getStationName(generalReportsController.station!)}",
+                                  context,
+                                );
                                 _formKey.currentState!.reset();
                                 generalReportsController.clearImage();
                                 context.pop();
                               } else {
-                                print(
-                                  "Error : ${generalReportsController.errorMessage['image']}",
+                                ErrorSnackBar.show(
+                                  title:
+                                      'Error: ${generalReportsController.errorMessage['image']}',
+                                  context,
                                 );
                               }
                             },

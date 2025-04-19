@@ -7,6 +7,8 @@ import 'package:highway_weight/controllers/general_lists_controller.dart';
 import 'package:highway_weight/models/general_lists_model.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/styles/text_styles.dart';
+import 'package:highway_weight/widgets/custom_text_button.dart';
+import 'package:highway_weight/widgets/form_modal.dart';
 import 'package:highway_weight/widgets/pagination.dart';
 import 'package:highway_weight/widgets/popup_modal.dart';
 import 'package:highway_weight/widgets/primary_button.dart';
@@ -26,7 +28,12 @@ class HomeGeneralReports extends StatelessWidget {
     List<GeneralReportsModel> activeGeneralLists =
         generalReportsController.generalReportLists
             .where((item) => item.isActive)
-            .toList();
+            .toList()
+          ..sort(
+            (a, b) =>
+                (b.whoCreated?.id.toString() == authController.id ? 1 : 0) -
+                (a.whoCreated?.id.toString() == authController.id ? 1 : 0),
+          );
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 60.0),
       child: Column(
@@ -35,19 +42,22 @@ class HomeGeneralReports extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("General Reports", style: TextStyles.h3Semi),
-              PrimaryButton(
-                icon: Icons.add,
-                text: "ADD REPORT",
-                onPressed: () {
-                  context.push('/general_reports');
-                },
-              ),
+
+              if (authController.role == '1' || authController.role == "5")
+                PrimaryButton(
+                  icon: Icons.add,
+                  text: "ADD REPORT",
+                  onPressed: () {
+                    context.push('/general_reports');
+                  },
+                ),
             ],
           ),
           SizedBox(height: 24.0),
           ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 300.0),
             child: DataTable(
+              columnSpacing: 48.0,
               sortAscending: true,
               columns:
                   generalReportHeaders.asMap().entries.map((entries) {
@@ -55,7 +65,7 @@ class HomeGeneralReports extends StatelessWidget {
                   }).toList(),
               rows:
                   generalReportsController
-                      .getPaginatedGeneralLists()
+                      .getPaginatedGeneralLists(authController.id)
                       .asMap()
                       .entries
                       .map((entries) {
@@ -129,20 +139,57 @@ class HomeGeneralReports extends StatelessWidget {
                               entries.value.isActive == false
                                   ? SizedBox.shrink()
                                   : authController.role == '2'
-                                  ? Row(
-                                    children: [
-                                      PrimaryButton(
-                                        text: "Approve",
-                                        onPressed: () {},
-                                      ),
-                                      SizedBox(width: 8.0),
-                                      PrimaryButton(
-                                        text: "Reject",
-                                        onPressed: () {},
-                                      ),
-                                    ],
+                                  ? CustomTextButton(
+                                    icon: Icons.mark_unread_chat_alt,
+                                    text: "Review",
+                                    onPressed: () {
+                                      generalReportsController.updateAllField(
+                                        entries.value,
+                                      );
+                                      FormModal.showModal(
+                                        role: authController.role,
+                                        context,
+                                        title: "Approve & Comment",
+                                        generalName: entries.value.name,
+                                        description: entries.value.description,
+                                        category: IssueCategory.getTitle(
+                                          entries.value.category,
+                                        ),
+                                        onCommentChange: (value) {
+                                          generalReportsController.updateField(
+                                            "comment",
+                                            value,
+                                          );
+                                        },
+                                        commentValidator:
+                                            (value) => generalReportsController
+                                                .validateField(
+                                                  "comment",
+                                                  value,
+                                                ),
+                                        station: entries.value.station.name,
+                                        imageUrl: entries.value.imageUrl,
+                                        primaryButtonText: "APPROVE",
+                                        primaryButtonOnPressed: () {
+                                          generalReportsController
+                                              .resetAllField();
+                                         
+                                        },
+                                        secondaryButtonText: "REJECT",
+                                        secondaryButtonOnPressed: () {
+                                          generalReportsController
+                                              .resetAllField();
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                        },
+                                      );
+                                    },
                                   )
-                                  : Row(
+                                  : entries.value.whoCreated?.id.toString() ==
+                                      authController.id
+                                  ? Row(
                                     children: [
                                       IconButton(
                                         icon: const Icon(
@@ -192,6 +239,27 @@ class HomeGeneralReports extends StatelessWidget {
                                         },
                                       ),
                                     ],
+                                  )
+                                  : CustomTextButton(
+                                    icon: Icons.library_books_outlined,
+                                    text: "View",
+                                    onPressed: () {
+                                      FormModal.showModal(
+                                        role: authController.role,
+                                        context,
+                                        caption:
+                                            "Created at ${DateFormat("yyyy-MM-dd HH:mm").format(entries.value.createdAt)}",
+                                        title:
+                                            "Created by ${entries.value.whoCreated?.name}",
+                                        generalName: entries.value.name,
+                                        description: entries.value.description,
+                                        category: IssueCategory.getTitle(
+                                          entries.value.category,
+                                        ),
+                                        station: entries.value.station.name,
+                                        imageUrl: entries.value.imageUrl,
+                                      );
+                                    },
                                   ),
                             ),
                           ],

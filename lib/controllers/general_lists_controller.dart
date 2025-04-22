@@ -15,6 +15,7 @@ class GeneralReportsController extends ChangeNotifier {
   Uint8List? image;
   String? imageFileName;
   int? reportId;
+  int? status;
   Map<String, String> errorMessage = {};
 
   List<GeneralReportsModel> generalReportLists = [];
@@ -165,6 +166,50 @@ class GeneralReportsController extends ChangeNotifier {
     }
   }
 
+  Future<void> approveGeneralReport(int id, String comment) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      if (id != 0) {
+        final result = await _repository.changeStatus(id, 2, comment);
+        final index = generalReportLists.indexWhere((item) => item.id == id);
+        if (index != -1) {
+          generalReportLists[index] = result;
+        }
+        await fetchGeneralReports();
+      }
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      throw Exception("Fail to approve $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> rejectGeneralReport(int id, String comment) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      if (id != 0) {
+        final result = await _repository.changeStatus(id, 3, comment);
+        final index = generalReportLists.indexWhere((item) => item.id == id);
+        if (index != -1) {
+          generalReportLists[index] = result;
+        }
+        await fetchGeneralReports();
+      }
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      throw Exception("Fail to approve $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void updateAllField(GeneralReportsModel model) {
     generalName = model.name;
     imageFileName = model.imageUrl;
@@ -260,11 +305,13 @@ class GeneralReportsController extends ChangeNotifier {
   List<GeneralReportsModel> getPaginatedGeneralLists(String? id) {
     if (id != null) {
       List<GeneralReportsModel> activeGeneralLists =
-          generalReportLists.where((item) => item.isActive).toList()..sort(
-            (a, b) =>
-                (b.whoCreated?.id.toString() == id ? 1 : 0) -
-                (a.whoCreated?.id.toString() == id ? 1 : 0),
-          );
+          generalReportLists.where((item) => item.isActive).toList()
+            ..sort(
+              (a, b) =>
+                  (b.whoCreated?.id.toString() == id ? 1 : 0) -
+                  (a.whoCreated?.id.toString() == id ? 1 : 0),
+            )
+            ..sort((a, b) => (b.status == 1 ? 1 : 0) - (a.status == 1 ? 1 : 0));
       int startIndex = currentPage * itemsPerPage;
       int endIndex = startIndex + itemsPerPage;
       return activeGeneralLists.sublist(

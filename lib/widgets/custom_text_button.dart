@@ -19,6 +19,7 @@ class CustomTextButton extends StatelessWidget {
       child:
           icon != null
               ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Icon(icon, size: 20.0),
@@ -26,7 +27,7 @@ class CustomTextButton extends StatelessWidget {
                   Text(text, style: TextStyles.labelReg,),
                 ],
               )
-              : Text(text),
+              : Text(text, textAlign: TextAlign.center,),
     );
   }
 }

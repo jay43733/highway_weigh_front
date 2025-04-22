@@ -4,7 +4,7 @@ import 'package:highway_weight/app.dart';
 import 'package:highway_weight/constants/custom_scroll_behavior.dart';
 import 'package:highway_weight/controllers/auth_controller.dart';
 import 'package:highway_weight/controllers/general_lists_controller.dart';
-import 'package:highway_weight/controllers/main_lists_controller.dart';
+import 'package:highway_weight/controllers/main_reports_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
 import 'package:highway_weight/controllers/users_controller.dart';
 import 'package:highway_weight/styles/theme.dart';
@@ -23,7 +23,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => UsersController()),
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => GeneralReportsController()),
-        ChangeNotifierProvider(create: (_) => MainListsController()),
+        ChangeNotifierProvider(create: (_) => MainReportsController()),
         ChangeNotifierProvider(create: (_) => StationsController()),
       ],
       child: MyApp(),

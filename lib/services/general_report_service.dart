@@ -177,4 +177,35 @@ class GeneralReportService {
       throw Exception("Failed to fetch $e");
     }
   }
+
+  Future<Map<String, dynamic>> changeReportStatus(
+    int reportId,
+    int status,
+    String comment,
+  ) async {
+    final token = await storage.read(key: 'accessToken');
+    if (token == null) {
+      throw Exception("No access token found");
+    }
+    final url = Uri.parse("$baseUrl/general_reports/status/$reportId");
+    final headers = {
+      "Content-Type": 'application/json',
+      "Authorization": "Bearer $token",
+    };
+    final body = jsonEncode({'status': status, "comment": comment});
+    print("Fetching Url : $url ");
+    try {
+      final response = await http.patch(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print("Status: ${response.statusCode}");
+        return data;
+      } else {
+        print("Status: ${response.statusCode}");
+        throw Exception("Error Body: ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Error Body: $e");
+    }
+  }
 }

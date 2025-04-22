@@ -1,6 +1,5 @@
 import 'dart:typed_data';
-
-import 'package:highway_weight/models/general_lists_model.dart';
+import 'package:highway_weight/models/general_reports_model.dart';
 import 'package:highway_weight/services/general_report_service.dart';
 
 class GeneralReportRepository {
@@ -69,6 +68,24 @@ class GeneralReportRepository {
         stationId,
         image,
         imageFileName,
+      );
+      final result = GeneralReportsModel.fromJson(jsonData);
+      return result;
+    } catch (e) {
+      throw Exception("Failed to fetch $e");
+    }
+  }
+
+  Future<GeneralReportsModel> changeStatus(
+    int reportId,
+    int status,
+    String comment,
+  ) async {
+    try {
+      final jsonData = await _service.changeReportStatus(
+        reportId,
+        status,
+        comment,
       );
       final result = GeneralReportsModel.fromJson(jsonData);
       return result;

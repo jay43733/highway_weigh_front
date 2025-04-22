@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:highway_weight/controllers/auth_controller.dart';
 import 'package:highway_weight/controllers/general_lists_controller.dart';
-import 'package:highway_weight/controllers/main_lists_controller.dart';
+import 'package:highway_weight/controllers/main_reports_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
 import 'package:highway_weight/views/home/home_general_reports.dart';
 import 'package:highway_weight/views/home/home_hero.dart';
@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late StationsController stationsController;
+  late MainReportsController mainReportsController;
   late GeneralReportsController generalReportsController;
 
   @override
@@ -28,6 +29,9 @@ class _HomePageState extends State<HomePage> {
     Future.microtask(() {
       generalReportsController = Provider.of(context, listen: false);
       generalReportsController.fetchGeneralReports();
+
+      mainReportsController = Provider.of(context, listen: false);
+      mainReportsController.fetchMainReports();
 
       stationsController = Provider.of(context, listen: false);
       stationsController.fetchStations();
@@ -40,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     final generalReportController = Provider.of<GeneralReportsController>(
       context,
     );
-    final mainReportController = Provider.of<MainListsController>(context);
+    final mainReportController = Provider.of<MainReportsController>(context);
     final stationsController = Provider.of<StationsController>(context);
 
     final List<GlobalKey> navBarKey = List.generate(3, (index) => GlobalKey());
@@ -63,7 +67,9 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-    if (generalReportController.isLoading || stationsController.isLoading) {
+    if (generalReportController.isLoading ||
+        stationsController.isLoading ||
+        mainReportController.isLoading) {
       return const Loading();
     } else {
       return Scaffold(
@@ -76,11 +82,13 @@ class _HomePageState extends State<HomePage> {
                   onNavChange: onNavChange,
                 ),
                 HomeGeneralReports(
+                  mainReportsController: mainReportController,
                   generalReportsController: generalReportController,
                   authController: authController,
                   key: navBarKey[0],
                 ),
                 HomeMainReports(
+                  authController: authController,
                   mainListsController: mainReportController,
                   key: navBarKey[1],
                 ),

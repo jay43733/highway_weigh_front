@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:highway_weight/repositories/auth_repository.dart';
+import 'package:highway_weight/services/navigation_service.dart';
 
 class AuthController extends ChangeNotifier {
   final AuthRepository _authRepos = AuthRepository();
@@ -93,11 +95,13 @@ class AuthController extends ChangeNotifier {
     return null;
   }
 
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     _isLoading = true;
     _user = '';
     role = '';
+    context.go('/');
     await storage.deleteAll();
+    await NavigationService.clearLastPath();
     notifyListeners();
   }
 }

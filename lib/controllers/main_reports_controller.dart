@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:highway_weight/models/main_lists_model.dart';
+import 'package:highway_weight/models/main_reports_model.dart';
 
-class MainListsController extends ChangeNotifier {
-  List<MainListsModel> mainReportLists = [];
+class MainReportsController extends ChangeNotifier {
+  List<MainReportsModel> mainReportLists = [];
 
   void onPageChanged(int newPage) {
     currentPage = newPage;
@@ -11,7 +11,7 @@ class MainListsController extends ChangeNotifier {
 
   int currentPage = 0;
   int itemsPerPage = 5;
-  List<MainListsModel> getPaginatedMainLists() {
+  List<MainReportsModel> getPaginatedMainLists() {
     int startIndex = currentPage * itemsPerPage;
     int endIndex = startIndex + itemsPerPage;
     return mainReportLists.sublist(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:highway_weight/controllers/general_lists_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
-import 'package:highway_weight/models/general_lists_model.dart';
+import 'package:highway_weight/models/general_reports_model.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/styles/text_styles.dart';
 import 'package:highway_weight/widgets/custom_animated_container.dart';

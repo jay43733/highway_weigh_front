@@ -12,4 +12,9 @@ class NavigationService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_pathKey) ?? '/login';
   }
+
+  static Future<void> clearLastPath() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_pathKey);
+  }
 }

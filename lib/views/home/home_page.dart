@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:highway_weight/controllers/auth_controller.dart';
 import 'package:highway_weight/controllers/general_lists_controller.dart';
-import 'package:highway_weight/controllers/main_lists_controller.dart';
+import 'package:highway_weight/controllers/main_reports_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
 import 'package:highway_weight/views/home/home_general_reports.dart';
 import 'package:highway_weight/views/home/home_hero.dart';
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
     final generalReportController = Provider.of<GeneralReportsController>(
       context,
     );
-    final mainReportController = Provider.of<MainListsController>(context);
+    final mainReportController = Provider.of<MainReportsController>(context);
     final stationsController = Provider.of<StationsController>(context);
 
     final List<GlobalKey> navBarKey = List.generate(3, (index) => GlobalKey());

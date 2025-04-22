@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:highway_weight/constants/app_constants.dart';
-import 'package:highway_weight/controllers/main_lists_controller.dart';
-import 'package:highway_weight/models/general_lists_model.dart';
+import 'package:highway_weight/controllers/main_reports_controller.dart';
+import 'package:highway_weight/models/general_reports_model.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/styles/text_styles.dart';
 import 'package:highway_weight/widgets/pagination.dart';
 import 'package:intl/intl.dart';
 
 class HomeMainReports extends StatelessWidget {
-  final MainListsController mainListsController;
+  final MainReportsController mainListsController;
   const HomeMainReports({super.key, required this.mainListsController});
 
   @override

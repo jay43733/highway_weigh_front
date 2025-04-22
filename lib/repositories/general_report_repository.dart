@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:highway_weight/models/general_lists_model.dart';
+import 'package:highway_weight/models/general_reports_model.dart';
 import 'package:highway_weight/services/general_report_service.dart';
 
 class GeneralReportRepository {

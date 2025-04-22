@@ -4,7 +4,7 @@ import 'package:highway_weight/models/users_model.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'general_lists_model.g.dart';
+part 'general_reports_model.g.dart';
 
 class IssueCategory {
   static const int overWeight = 1;
@@ -59,7 +59,7 @@ class GeneralReportsModel {
   @JsonKey(name: 'id')
   final int id;
 
-  @JsonKey(name: "who_created",includeIfNull: true)
+  @JsonKey(name: "who_created", includeIfNull: true)
   final UsersModel? whoCreated;
 
   @JsonKey(name: "name")

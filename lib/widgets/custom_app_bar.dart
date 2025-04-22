@@ -149,8 +149,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         return PopupMenuItem(
                           onTap: () async {
                             if (entries.key == 1) {
-                              await authController.logout();
-                              Future.microtask(() => context.go("/login"));
+                              await authController.logout(context);
                             } else {
                               null;
                             }

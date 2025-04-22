@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import 'package:highway_weight/models/general_lists_model.dart';
+import 'package:highway_weight/models/general_reports_model.dart';
 import 'package:highway_weight/repositories/general_report_repository.dart';
 import 'package:image_picker/image_picker.dart';
 

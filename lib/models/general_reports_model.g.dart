@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'general_lists_model.dart';
+part of 'general_reports_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

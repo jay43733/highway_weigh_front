@@ -1,12 +1,16 @@
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:highway_weight/models/general_reports_model.dart';
 import 'package:highway_weight/repositories/general_report_repository.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class GeneralReportsController extends ChangeNotifier {
   final GeneralReportRepository _repository = GeneralReportRepository();
   bool isLoading = false;
+  DateTime reportedDate = DateTime.now();
+  final TextEditingController reportedDateController = TextEditingController();
   String generalName = '';
   String description = '';
   String comment = '';
@@ -17,6 +21,14 @@ class GeneralReportsController extends ChangeNotifier {
   int? reportId;
   int? status;
   Map<String, String> errorMessage = {};
+
+  String _formatDate(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+  GeneralReportsController() {
+    reportedDateController.text = _formatDate(reportedDate);
+  }
 
   List<GeneralReportsModel> generalReportLists = [];
 
@@ -142,6 +154,12 @@ class GeneralReportsController extends ChangeNotifier {
     if (field == 'image') {
       image = value;
     }
+    if (field == 'reportedDate') {
+      reportedDate = value;
+      reportedDateController.text = DateFormat('yyyy-MM-dd').format(value);
+    }
+
+    print("Date: $reportedDate");
     notifyListeners();
   }
 
@@ -254,7 +272,17 @@ class GeneralReportsController extends ChangeNotifier {
     }
     if (field == 'comment') {
       if (value == '') {
-        return "Please fill your comment ";
+        return "Please fill your comment.";
+      }
+    }
+
+    if (field == 'reportedDate') {
+      if (value == null) {
+        return "Please specify when this report was issued.";
+      }
+      final parsed = DateTime.tryParse(value);
+      if (parsed != null && parsed.isAfter(DateTime.now())) {
+        return "Report date cannot be in the future.";
       }
     }
     return null;
@@ -328,5 +356,11 @@ class GeneralReportsController extends ChangeNotifier {
         endIndex.clamp(0, activeGeneralLists.length),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    reportedDateController.dispose();
+    super.dispose();
   }
 }

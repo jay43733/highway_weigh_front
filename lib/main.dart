@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       home: const App(),
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-      title: 'Highway Weigh',
+      title: 'Highway Weigh', 
       scrollBehavior: CustomScrollBehavior(),
     );
   }

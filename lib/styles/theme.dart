@@ -140,6 +140,12 @@ class AppTheme {
     elevation: 20.0,
   );
 
+  static final DatePickerThemeData _datePickerThemeData = DatePickerThemeData(
+    backgroundColor: AppColors.bgColor,
+    dayForegroundColor: WidgetStatePropertyAll(AppColors.blackPrimary),
+    dayStyle: TextStyles.bodySemi,
+  );
+
   static final TooltipThemeData _tooltipThemeData = TooltipThemeData(
     showDuration: Duration(milliseconds: 300),
     verticalOffset: -40,
@@ -167,6 +173,7 @@ class AppTheme {
     outlinedButtonTheme: _outlinedButtonThemeData,
     dropdownMenuTheme: _dropdownMenuThemeData,
     dialogTheme: _dialogThemeData,
+    datePickerTheme: _datePickerThemeData,
     textSelectionTheme: _textSelectionThemeData,
     snackBarTheme: _snackBarThemeData,
     fontFamily: 'IBMPlexSansThai',

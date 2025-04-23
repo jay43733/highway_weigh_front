@@ -71,6 +71,51 @@ class GeneralReportForm extends StatelessWidget {
                     children: [
                       Text("รายละเอียดการร้องเรียน", style: TextStyles.h4Semi),
                       SizedBox(height: 20.0),
+                      Consumer<GeneralReportsController>(
+                        builder: (context, value, _) {
+                          return CustomTextFormField(
+                            controller: value.reportedDateController,
+                            labelText: "วันที่ร้องเรียน",
+                            readOnly: true,
+                            useCursorClick: true,
+                            suffixIcon: Icons.calendar_month_outlined,
+                            validator:
+                                (value) => generalReportsController
+                                    .validateField("reportedDate", value),
+                            onTap: () async {
+                              final DateTime? dateTime = await showDatePicker(
+                                context: context,
+                                initialDate: generalReportsController.reportedDate,
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                                currentDate: DateTime.now(),
+                              );
+                              if (dateTime != null) {
+                                generalReportsController.updateField(
+                                  "reportedDate",
+                                  dateTime,
+                                );
+                              }
+                            },
+                            onSuffixPressed: () async {
+                              final DateTime? dateTime = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                                currentDate: DateTime.now(),
+                              );
+                              if (dateTime != null) {
+                                generalReportsController.updateField(
+                                  "reportedDate",
+                                  dateTime,
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(height: 20.0),
                       CustomTextFormField(
                         labelText: "ชื่อหัวข้อ",
                         onChanged: (value) {

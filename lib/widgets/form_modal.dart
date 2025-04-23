@@ -11,6 +11,7 @@ class FormModal extends StatefulWidget {
   final String station;
   final String imageUrl;
   final int status;
+  final String formName;
   final String? Function(String?)? commentValidator;
   final Function(String)? onCommentChanged;
   final String? title;
@@ -40,6 +41,7 @@ class FormModal extends StatefulWidget {
     this.onCommentChanged,
     this.role,
     required this.status,
+    required this.formName,
   });
 
   @override
@@ -57,6 +59,7 @@ class FormModal extends StatefulWidget {
     String? secondaryButtonText,
     Function(String)? onCommentChange,
     String? Function(String?)? commentValidator,
+    required String formName,
     required String generalName,
     required String description,
     required String category,
@@ -97,6 +100,7 @@ class FormModal extends StatefulWidget {
               category: category,
               station: station,
               imageUrl: imageUrl,
+              formName: formName,
             );
           },
         );
@@ -116,7 +120,11 @@ class _FormModalState extends State<FormModal> {
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 320.0,
-          vertical: widget.role == "2" ? 20.0 : 80.0,
+          vertical:
+              (widget.formName == 'general' && widget.role == "2" && widget.status == 1) ||
+                      (widget.formName == 'main' && widget.role == "1" && widget.status == 1)
+                  ? 20.0
+                  : 60.0,
         ),
         child: Stack(
           children: [
@@ -138,7 +146,14 @@ class _FormModalState extends State<FormModal> {
                 ],
               ),
               child:
-                  (widget.role == "2" && widget.status == 1)
+                  widget.formName == 'general' &&
+                          (widget.role == "2" && widget.status == 1)
+                      ? SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: _buildScrollableContent(),
+                      )
+                      : widget.formName == 'main' &&
+                          (widget.role == "1" && widget.status == 1)
                       ? SingleChildScrollView(
                         scrollDirection: Axis.vertical,
                         child: _buildScrollableContent(),
@@ -175,7 +190,11 @@ class _FormModalState extends State<FormModal> {
   Widget _buildScrollableContent() {
     return Container(
       constraints: BoxConstraints(
-        maxHeight: widget.role == "2" ? 840.0 : 640.0,
+        maxHeight:
+            (widget.formName == 'general' && widget.role == "2") ||
+                    (widget.formName == 'main' && widget.role == "1")
+                ? 840.0
+                : 640.0,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -234,7 +253,9 @@ class _FormModalState extends State<FormModal> {
           ],
         ),
       ),
-      if (widget.role == "2" && widget.status == 1) ...[
+      if (widget.formName == 'general' &&
+          widget.role == "2" &&
+          widget.status == 1) ...[
         const SizedBox(height: 20.0),
         Padding(
           padding: const EdgeInsets.all(24.0),
@@ -243,6 +264,60 @@ class _FormModalState extends State<FormModal> {
             key: _formKey,
             child: CustomTextFormField(
               hintText: "ความคิดเห็นของหัวหน้าสถานี",
+              labelText: "Comment",
+              maxLines: 3,
+              onChanged: (value) {
+                setState(() {
+                  comment = value;
+                });
+              },
+              validator: widget.commentValidator,
+            ),
+          ),
+        ),
+        const SizedBox(height: 20.0),
+        if (widget.secondaryButtonText != null &&
+            widget.secondaryButtonOnPressed != null &&
+            widget.primaryButtonText != null &&
+            widget.primaryButtonOnPressed != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PrimaryButton(
+                icon: Icons.close_sharp,
+                color: AppColors.redColor,
+                text: widget.secondaryButtonText!,
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    widget.secondaryButtonOnPressed!.call(comment);
+                  }
+                },
+              ),
+              SizedBox(width: 40.0),
+              PrimaryButton(
+                icon: Icons.check,
+                color: AppColors.greenColor,
+                text: widget.primaryButtonText!,
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    widget.primaryButtonOnPressed!.call(comment);
+                  }
+                },
+              ),
+            ],
+          ),
+      ],
+      if (widget.formName == 'main' &&
+          widget.role == "1" &&
+          widget.status == 1) ...[
+        const SizedBox(height: 20.0),
+        Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Form(
+            autovalidateMode: AutovalidateMode.onUnfocus,
+            key: _formKey,
+            child: CustomTextFormField(
+              hintText: "ความคิดเห็นของผู้อำนวยการ",
               labelText: "Comment",
               maxLines: 3,
               onChanged: (value) {

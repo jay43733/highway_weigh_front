@@ -67,7 +67,7 @@ class LoginPage extends StatelessWidget {
                           vertical: 8.0,
                         ),
                         child: Text(
-                          "Highway Weight",
+                          "Highway Weigh",
                           style: TextStyles.h3Semi.copyWith(
                             color: AppColors.brandPrimary,
                           ),

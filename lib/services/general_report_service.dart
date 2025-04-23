@@ -155,7 +155,7 @@ class GeneralReportService {
     if (token == null) {
       throw Exception("No access token found");
     }
-    final url = Uri.parse("$baseUrl/general_reports/$reportId");
+    final url = Uri.parse("$baseUrl/general_reports/deactivate/$reportId");
     final headers = {
       "Content-Type": 'application/json',
       "Authorization": "Bearer $token",

@@ -38,6 +38,28 @@ class HomeGeneralReports extends StatelessWidget {
                 (b.whoCreated?.id.toString() == authController.id ? 1 : 0) -
                 (a.whoCreated?.id.toString() == authController.id ? 1 : 0),
           );
+
+    if (generalReportsController.generalReportLists.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 60.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("General Reports", style: TextStyles.h3Semi),
+            SizedBox(height: 24.0),
+            Center(
+              child: Text(
+                "No general report",
+                style: TextStyles.captionReg.copyWith(
+                  color: AppColors.redColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: 1340.0),
       child: Container(
@@ -154,6 +176,7 @@ class HomeGeneralReports extends StatelessWidget {
                                           entries.value,
                                         );
                                         FormModal.showModal(
+                                          formName: "general",
                                           status: entries.value.status,
                                           role: authController.role,
                                           context,
@@ -252,8 +275,10 @@ class HomeGeneralReports extends StatelessWidget {
                                         );
                                       },
                                     )
-                                    : entries.value.whoCreated?.id.toString() ==
-                                        authController.id
+                                    : (entries.value.whoCreated?.id
+                                                .toString() ==
+                                            authController.id) &&
+                                        entries.value.status == 1
                                     ? Row(
                                       children: [
                                         IconButton(
@@ -312,6 +337,7 @@ class HomeGeneralReports extends StatelessWidget {
                                       text: "View",
                                       onPressed: () {
                                         FormModal.showModal(
+                                          formName: "general",
                                           status: entries.value.status,
                                           role: authController.role,
                                           context,

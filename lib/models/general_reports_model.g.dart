@@ -22,6 +22,8 @@ GeneralReportsModel _$GeneralReportsModelFromJson(Map<String, dynamic> json) =>
       status: (json['status'] as num).toInt(),
       station: StationsModel.fromJson(json['station'] as Map<String, dynamic>),
       isActive: json['is_active'] as bool,
+      reportedDate: json['reported_date'] as String,
+      visitDate: json['visit_date'] as String?,
       updatedAt:
           json['edited_at'] == null
               ? null
@@ -47,4 +49,6 @@ Map<String, dynamic> _$GeneralReportsModelToJson(
   'comment': instance.comment,
   'imageUrl': instance.imageUrl,
   'is_active': instance.isActive,
+  'reported_date': instance.reportedDate,
+  'visit_date': instance.visitDate,
 };

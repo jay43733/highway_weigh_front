@@ -95,6 +95,12 @@ class GeneralReportsModel {
   @JsonKey(name: 'is_active')
   final bool isActive;
 
+  @JsonKey(name: 'reported_date')
+  final String reportedDate;
+
+  @JsonKey(name: 'visit_date', includeIfNull: true)
+  final String? visitDate;
+
   GeneralReportsModel({
     required this.id,
     required this.whoCreated,
@@ -105,6 +111,8 @@ class GeneralReportsModel {
     required this.status,
     required this.station,
     required this.isActive,
+    required this.reportedDate,
+    this.visitDate,
     this.updatedAt,
     this.image,
     required this.imageUrl,

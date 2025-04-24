@@ -50,6 +50,7 @@ class GeneralReportService {
     String stationId,
     Uint8List image,
     String imageFileName,
+    String reportedDate,
   ) async {
     final token = await storage.read(key: "accessToken");
     if (token == null) {
@@ -77,6 +78,7 @@ class GeneralReportService {
       request.fields['detail'] = detail;
       request.fields['issue_type'] = issueType;
       request.fields['station_id'] = stationId;
+      request.fields['reported_date'] = reportedDate;
 
       final fields = await request.send();
       final response = await http.Response.fromStream(fields);

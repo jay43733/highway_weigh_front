@@ -23,6 +23,7 @@ class GeneralReportRepository {
     String stationId,
     Uint8List image,
     String imageFileName,
+    String reportedDate,
   ) async {
     try {
       final jsonData = await _service.createGeneralReport(
@@ -32,6 +33,7 @@ class GeneralReportRepository {
         stationId,
         image,
         imageFileName,
+        reportedDate,
       );
       final result = GeneralReportsModel.fromJson(jsonData);
       return result;

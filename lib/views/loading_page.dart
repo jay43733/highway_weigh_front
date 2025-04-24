@@ -44,11 +44,13 @@ class _LoadingPageState extends State<LoadingPage> {
   }
 
   Future<void> _redirectedToLastPath() async {
+    final authController = Provider.of<AuthController>(context, listen: false);
     await _checkRole();
     await Future.delayed(const Duration(milliseconds: 200));
 
     if (mounted) {
       final lastPath = await NavigationService.getLastPath();
+      authController.getStorage('routeNow', lastPath);
       context.go(lastPath);
     }
   }

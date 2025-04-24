@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/styles/text_styles.dart';
+import 'package:highway_weight/widgets/popup_modal.dart';
 
 class HomeMap extends StatelessWidget {
   final StationsController stationsController;
@@ -59,11 +60,12 @@ class HomeMap extends StatelessWidget {
               markers:
                   stationsController.stations.asMap().entries.map((entries) {
                     return Marker(
-                      onTap:
-                          () => stationsController.cameraToPosition(
-                            entries.value.lat,
-                            entries.value.long,
-                          ),
+                      onTap: () {
+                        stationsController.cameraToPosition(
+                          entries.value.lat,
+                          entries.value.long,
+                        );
+                      },
                       markerId: MarkerId(entries.key.toString()),
                       icon: BitmapDescriptor.defaultMarker,
                       position: LatLng(entries.value.lat, entries.value.long),
@@ -101,6 +103,12 @@ class HomeMap extends StatelessWidget {
                         stationsController.cameraToPosition(
                           item.lat,
                           item.long,
+                        );
+                        PopupModal.showModal(
+                          context,
+                          title: "Yeah",
+                          boldText: "${LatLng(item.lat, item.long)}",
+                          caption: "Yeah",
                         );
                       },
                       child: Text(

@@ -9,11 +9,13 @@ import 'package:intl/intl.dart';
 class GeneralReportsController extends ChangeNotifier {
   final GeneralReportRepository _repository = GeneralReportRepository();
   bool isLoading = false;
-  DateTime reportedDate = DateTime.now();
+  String reportedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String? updateReportedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   final TextEditingController reportedDateController = TextEditingController();
   String generalName = '';
   String description = '';
   String comment = '';
+  String? visitDate;
   int? category;
   int? station;
   Uint8List? image;
@@ -22,12 +24,8 @@ class GeneralReportsController extends ChangeNotifier {
   int? status;
   Map<String, String> errorMessage = {};
 
-  String _formatDate(DateTime date) {
-    return DateFormat('yyyy-MM-dd').format(date);
-  }
-
   GeneralReportsController() {
-    reportedDateController.text = _formatDate(reportedDate);
+    reportedDateController.text = reportedDate;
   }
 
   List<GeneralReportsModel> generalReportLists = [];
@@ -62,6 +60,7 @@ class GeneralReportsController extends ChangeNotifier {
           station!.toString(),
           image!,
           imageFileName!,
+          reportedDate,
         );
         generalReportLists.add(newGeneralReport);
       }
@@ -156,10 +155,9 @@ class GeneralReportsController extends ChangeNotifier {
     }
     if (field == 'reportedDate') {
       reportedDate = value;
-      reportedDateController.text = DateFormat('yyyy-MM-dd').format(value);
+      reportedDateController.text = value;
     }
 
-    print("Date: $reportedDate");
     notifyListeners();
   }
 
@@ -235,6 +233,12 @@ class GeneralReportsController extends ChangeNotifier {
     category = model.category;
     station = model.station.id;
     reportId = model.id;
+    reportedDate = model.reportedDate;
+    updateReportedDate = model.reportedDate;
+    if (model.visitDate != null) {
+      visitDate = model.visitDate;
+    }
+
     notifyListeners();
   }
 
@@ -246,6 +250,8 @@ class GeneralReportsController extends ChangeNotifier {
     category = null;
     station = null;
     reportId = null;
+    reportedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    updateReportedDate = null;
     notifyListeners();
   }
 
@@ -282,6 +288,17 @@ class GeneralReportsController extends ChangeNotifier {
       }
       final parsed = DateTime.tryParse(value);
       if (parsed != null && parsed.isAfter(DateTime.now())) {
+        return "Report date cannot be in the future.";
+      }
+    }
+
+    if (field == 'updateReportedDate') {
+      if (value == null) {
+        return "Please specify when this report was issued.";
+      }
+      final parsed = DateTime.tryParse(value);
+      if (parsed != null &&
+          parsed.isAfter(DateTime.parse(updateReportedDate!))) {
         return "Report date cannot be in the future.";
       }
     }

@@ -14,6 +14,7 @@ import 'package:highway_weight/widgets/loading.dart';
 import 'package:highway_weight/widgets/primary_button.dart';
 import 'package:highway_weight/widgets/secondary_button.dart';
 import 'package:highway_weight/widgets/success_snack_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class GeneralReportForm extends StatelessWidget {
@@ -48,7 +49,7 @@ class GeneralReportForm extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "Create General Report",
+          "สร้างข้อร้องเรียน",
           style: TextStyles.h3Semi.copyWith(color: AppColors.whitePrimary),
         ),
         SizedBox(height: 24.0),
@@ -85,30 +86,20 @@ class GeneralReportForm extends StatelessWidget {
                             onTap: () async {
                               final DateTime? dateTime = await showDatePicker(
                                 context: context,
-                                initialDate: generalReportsController.reportedDate,
+                                initialDate: DateTime.tryParse(
+                                  generalReportsController.reportedDate,
+                                ),
                                 firstDate: DateTime(2000),
                                 lastDate: DateTime(2100),
                                 currentDate: DateTime.now(),
                               );
                               if (dateTime != null) {
+                                final String dateTimeString = DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(dateTime);
                                 generalReportsController.updateField(
                                   "reportedDate",
-                                  dateTime,
-                                );
-                              }
-                            },
-                            onSuffixPressed: () async {
-                              final DateTime? dateTime = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2100),
-                                currentDate: DateTime.now(),
-                              );
-                              if (dateTime != null) {
-                                generalReportsController.updateField(
-                                  "reportedDate",
-                                  dateTime,
+                                  dateTimeString,
                                 );
                               }
                             },
@@ -243,7 +234,7 @@ class GeneralReportForm extends StatelessWidget {
                                 _formKey.currentState!.reset();
                                 generalReportsController.clearImage();
                               }
-                              context.pop();
+                              context.go("/home");
                             },
                           ),
                           SizedBox(width: 32.0),
@@ -264,7 +255,7 @@ class GeneralReportForm extends StatelessWidget {
                                 );
                                 _formKey.currentState!.reset();
                                 generalReportsController.clearImage();
-                                context.pop();
+                                context.go("/home");
                               } else {
                                 ErrorSnackBar.show(
                                   title:

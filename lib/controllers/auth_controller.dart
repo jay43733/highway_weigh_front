@@ -9,11 +9,13 @@ class AuthController extends ChangeNotifier {
   final storage = FlutterSecureStorage();
 
   bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  String _routeNow = '/login';
+  String? get routeNow => _routeNow;
   String? _user;
   String? _id;
   String? get id => _id;
   String? role;
-  bool get isLoading => _isLoading;
   String? get user => _user;
   bool showPassword = false;
   String username = '';
@@ -90,6 +92,9 @@ class AuthController extends ChangeNotifier {
     }
     if (field == "id") {
       _id = data;
+    }
+    if(field =='routeNow'){
+      _routeNow = data;
     }
     notifyListeners();
     return null;

@@ -28,12 +28,12 @@ class HomeMainReports extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Main Reports", style: TextStyles.h3Semi),
+            Text("รายการอนุมัติออกตรวจ", style: TextStyles.h4Semi),
             SizedBox(height: 24.0),
             Center(
               child: Text(
-                "No main report",
-                style: TextStyles.captionReg.copyWith(
+                "ไม่มีรายการอนุมัติออกตรวจ",
+                style: TextStyles.labelReg.copyWith(
                   color: AppColors.redColor,
                 ),
               ),
@@ -51,11 +51,11 @@ class HomeMainReports extends StatelessWidget {
           children: [
             const Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [Text("Main Reports", style: TextStyles.h3Semi)],
+              children: [Text("รายการอนุมัติออกตรวจ", style: TextStyles.h4Semi)],
             ),
             SizedBox(height: 24.0),
             ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 300.0),
+              constraints: const BoxConstraints(minHeight: 00.0),
               child: DataTable(
                 columnSpacing: 48.0,
                 sortAscending: true,

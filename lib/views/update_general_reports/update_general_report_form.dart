@@ -13,6 +13,7 @@ import 'package:highway_weight/widgets/error_snack_bar.dart';
 import 'package:highway_weight/widgets/primary_button.dart';
 import 'package:highway_weight/widgets/secondary_button.dart';
 import 'package:highway_weight/widgets/success_snack_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class UpdateGeneralReportForm extends StatefulWidget {
@@ -41,6 +42,8 @@ class _UpdateGeneralReportFormState extends State<UpdateGeneralReportForm> {
 
   @override
   Widget build(BuildContext context) {
+     print('Report : ${widget.generalReportsController.reportedDate}');
+    print('Update Report : ${widget.generalReportsController.updateReportedDate}');
     final _formKey = GlobalKey<FormState>();
     List<int> categoryOptions = [
       IssueCategory.overWeight,
@@ -57,7 +60,7 @@ class _UpdateGeneralReportFormState extends State<UpdateGeneralReportForm> {
     return Column(
       children: [
         Text(
-          "Edit General Report",
+          "แก้ไขข้อร้องเรียน",
           style: TextStyles.h3Semi.copyWith(color: AppColors.whitePrimary),
         ),
         SizedBox(height: 24.0),
@@ -79,6 +82,42 @@ class _UpdateGeneralReportFormState extends State<UpdateGeneralReportForm> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("รายละเอียดการร้องเรียน", style: TextStyles.h4Semi),
+                      SizedBox(height: 20.0),
+
+                      Consumer<GeneralReportsController>(
+                        builder: (context, value, _) {
+                          return CustomTextFormField(
+                            controller: value.reportedDateController,
+                            labelText: "วันที่ร้องเรียน",
+                            readOnly: true,
+                            useCursorClick: true,
+                            suffixIcon: Icons.calendar_month_outlined,
+                            validator:
+                                (value) => widget.generalReportsController
+                                    .validateField("updateReportedDate", value),
+                            onTap: () async {
+                              final DateTime? dateTime = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.tryParse(
+                                  widget.generalReportsController.reportedDate,
+                                ),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                                currentDate: DateTime.now(),
+                              );
+                              if (dateTime != null) {
+                                final String dateTimeString = DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(dateTime);
+                                widget.generalReportsController.updateField(
+                                  "reportedDate",
+                                  dateTimeString,
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
                       SizedBox(height: 20.0),
                       CustomTextFormField(
                         initialValue:
@@ -234,8 +273,12 @@ class _UpdateGeneralReportFormState extends State<UpdateGeneralReportForm> {
                                 SuccessSnackBar.show(
                                   context,
                                   title: "Updated successfully",
-                                  subtitle:
-                                      widget.stationsController.getStationName(widget.generalReportsController.station!),
+                                  subtitle: widget.stationsController
+                                      .getStationName(
+                                        widget
+                                            .generalReportsController
+                                            .station!,
+                                      ),
                                 );
 
                                 _formKey.currentState!.reset();

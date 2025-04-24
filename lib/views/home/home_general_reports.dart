@@ -45,12 +45,26 @@ class HomeGeneralReports extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("General Reports", style: TextStyles.h3Semi),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("ข้อร้องเรียน", style: TextStyles.h4Semi),
+
+                if (authController.role == '1' || authController.role == "5")
+                  PrimaryButton(
+                    icon: Icons.add,
+                    text: "สร้างข้อร้องเรียน",
+                    onPressed: () {
+                      context.push('/general_reports');
+                    },
+                  ),
+              ],
+            ),
             SizedBox(height: 24.0),
             Center(
               child: Text(
-                "No general report",
-                style: TextStyles.captionReg.copyWith(
+                "ไม่มีรายการข้อร้องเรียน",
+                style: TextStyles.labelReg.copyWith(
                   color: AppColors.redColor,
                 ),
               ),
@@ -69,12 +83,12 @@ class HomeGeneralReports extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("General Reports", style: TextStyles.h3Semi),
+                Text("ข้อร้องเรียน", style: TextStyles.h4Semi),
 
                 if (authController.role == '1' || authController.role == "5")
                   PrimaryButton(
                     icon: Icons.add,
-                    text: "ADD REPORT",
+                    text: "สร้างข้อร้องเรียน",
                     onPressed: () {
                       context.push('/general_reports');
                     },
@@ -83,7 +97,7 @@ class HomeGeneralReports extends StatelessWidget {
             ),
             SizedBox(height: 24.0),
             ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 300.0),
+              constraints: const BoxConstraints(minHeight: 100.0),
               child: DataTable(
                 columnSpacing: 48.0,
                 sortAscending: true,
@@ -237,7 +251,6 @@ class HomeGeneralReports extends StatelessWidget {
                                               generalReportsController
                                                   .resetAllField();
                                             } catch (e) {
-                                              print('Error occurred: $e');
                                               if (context.mounted) {
                                                 Navigator.of(
                                                   context,

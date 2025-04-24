@@ -20,7 +20,6 @@ class PrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (icon != null) Icon(icon, size: 20.0,),
           SizedBox(width: 4.0),

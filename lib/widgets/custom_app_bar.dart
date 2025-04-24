@@ -95,7 +95,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             : Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: TextButton(
                     onPressed: () {},
                     child: Text(
@@ -106,31 +106,43 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: TextButton(
                     onPressed: () {
                       onNavBarChanged == null ? null : onNavBarChanged!(0);
                     },
                     child: Text(
-                      'ข้อร้องเรียนจากประชาชน',
+                      'ข้อร้องเรียน',
                       style: TextStyle(color: AppColors.whitePrimary),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: TextButton(
                     onPressed: () {
                       onNavBarChanged == null ? null : onNavBarChanged!(1);
                     },
                     child: Text(
-                      'ข้อร้องเรียนจากสถานี',
+                      'รายการอนุมัติออกตรวจ',
                       style: TextStyle(color: AppColors.whitePrimary),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                  child: TextButton(
+                    onPressed: () {
+                      onNavBarChanged == null ? null : onNavBarChanged!(1);
+                    },
+                    child: Text(
+                      'รายการรอสุ่มตรวจ',
+                      style: TextStyle(color: AppColors.whitePrimary),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: TextButton(
                     onPressed: () {
                       onNavBarChanged == null ? null : onNavBarChanged!(2);
@@ -142,7 +154,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: PopupMenuButton(
                     itemBuilder: (context) {
                       return menuAtAppbar.asMap().entries.map((entries) {

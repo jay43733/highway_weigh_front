@@ -23,4 +23,22 @@ class MainReportRepository {
       throw Exception("Failed to fetch $e");
     }
   }
+
+  Future<MainReportsModel> changeStatus(
+    int mainReportId,
+    int status,
+    String comment,
+  ) async {
+    try {
+      final jsonData = await this._service.changeStatus(
+        mainReportId,
+        status,
+        comment,
+      );
+      final result = MainReportsModel.fromJson(jsonData);
+      return result;
+    } catch (e) {
+      throw Exception("Failed to fetch $e");
+    }
+  }
 }

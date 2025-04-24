@@ -35,6 +35,54 @@ class MainReportsController extends ChangeNotifier {
     }
   }
 
+  Future<void> approveMainReports(int mainReportId, String comment) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      final updateMainReport = await _repository.changeStatus(
+        mainReportId,
+        2,
+        comment,
+      );
+      final index = mainReportLists.indexWhere(
+        (item) => item.id == mainReportId,
+      );
+      if (index != -1) {
+        mainReportLists[index] = updateMainReport;
+      }
+      await fetchMainReports();
+    } catch (e) {
+      throw Exception("Fail to fetch get main $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> rejectMainReports(int mainReportId, String comment) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      final updateMainReport = await _repository.changeStatus(
+        mainReportId,
+        3,
+        comment,
+      );
+      final index = mainReportLists.indexWhere(
+        (item) => item.id == mainReportId,
+      );
+      if (index != -1) {
+        mainReportLists[index] = updateMainReport;
+      }
+      await fetchMainReports();
+    } catch (e) {
+      throw Exception("Fail to fetch get main $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void onPageChanged(int newPage) {
     currentPage = newPage;
     notifyListeners();

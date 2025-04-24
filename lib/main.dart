@@ -4,6 +4,7 @@ import 'package:highway_weight/app.dart';
 import 'package:highway_weight/constants/custom_scroll_behavior.dart';
 import 'package:highway_weight/controllers/auth_controller.dart';
 import 'package:highway_weight/controllers/general_lists_controller.dart';
+import 'package:highway_weight/controllers/inspector_reports_controller.dart';
 import 'package:highway_weight/controllers/main_reports_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
 import 'package:highway_weight/controllers/users_controller.dart';
@@ -24,6 +25,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => GeneralReportsController()),
         ChangeNotifierProvider(create: (_) => MainReportsController()),
+        ChangeNotifierProvider(create: (_) => InspectorReportsController()),
         ChangeNotifierProvider(create: (_) => StationsController()),
       ],
       child: MyApp(),
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
       home: const App(),
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-      title: 'Highway Weigh', 
+      title: 'Highway Weigh',
       scrollBehavior: CustomScrollBehavior(),
     );
   }

@@ -3,6 +3,7 @@ import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/styles/text_styles.dart';
 import 'package:highway_weight/widgets/custom_text_form_field.dart';
 import 'package:highway_weight/widgets/primary_button.dart';
+import 'package:intl/intl.dart';
 
 class FormModal extends StatefulWidget {
   final String generalName;
@@ -112,6 +113,8 @@ class FormModal extends StatefulWidget {
 class _FormModalState extends State<FormModal> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String comment = "";
+  final TextEditingController visitDateController = TextEditingController();
+  String visitDate = '';
 
   @override
   Widget build(BuildContext context) {
@@ -121,8 +124,12 @@ class _FormModalState extends State<FormModal> {
         padding: EdgeInsets.symmetric(
           horizontal: 320.0,
           vertical:
-              (widget.formName == 'general' && widget.role == "2" && widget.status == 1) ||
-                      (widget.formName == 'main' && widget.role == "1" && widget.status == 1)
+              (widget.formName == 'general' &&
+                          widget.role == "2" &&
+                          widget.status == 1) ||
+                      (widget.formName == 'main' &&
+                          widget.role == "1" &&
+                          widget.status == 1)
                   ? 20.0
                   : 60.0,
         ),
@@ -193,7 +200,7 @@ class _FormModalState extends State<FormModal> {
         maxHeight:
             (widget.formName == 'general' && widget.role == "2") ||
                     (widget.formName == 'main' && widget.role == "1")
-                ? 840.0
+                ? 920.0
                 : 640.0,
       ),
       child: Column(
@@ -262,16 +269,61 @@ class _FormModalState extends State<FormModal> {
           child: Form(
             autovalidateMode: AutovalidateMode.onUnfocus,
             key: _formKey,
-            child: CustomTextFormField(
-              hintText: "ความคิดเห็นของหัวหน้าสถานี",
-              labelText: "Comment",
-              maxLines: 3,
-              onChanged: (value) {
-                setState(() {
-                  comment = value;
-                });
-              },
-              validator: widget.commentValidator,
+            child: Column(
+              children: [
+                CustomTextFormField(
+                  controller: visitDateController,
+                  labelText: "วันที่ออกตรวจ",
+                  hintText: "วันที่ออกตรวจ",
+                  readOnly: true,
+                  useCursorClick: true,
+                  suffixIcon: Icons.calendar_month,
+                  validator: (value) {
+                    if (value != null) {
+                      final dateValue = DateTime.tryParse(value);
+                      final now = DateTime.now();
+                      final today = DateTime(now.year, now.month, now.day);
+                      if (dateValue == null) {
+                        return null;
+                      }
+                      if (dateValue.isBefore(today)) {
+                        return 'Visit date cannot be in the past';
+                      }
+                      return null;
+                    }
+                    return null;
+                  },
+                  onTap: () async {
+                    final DateTime? dateTime = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                    );
+                    if (dateTime != null) {
+                      final String dateTimeString = DateFormat(
+                        'yyyy-MM-dd',
+                      ).format(dateTime);
+                      setState(() {
+                        visitDate = dateTimeString;
+                        visitDateController.text = dateTimeString;
+                      });
+                      print("Visit : $visitDate");
+                    }
+                  },
+                ),
+                SizedBox(height: 16),
+                CustomTextFormField(
+                  hintText: "ความคิดเห็นของหัวหน้าสถานี",
+                  labelText: "Comment",
+                  maxLines: 3,
+                  onChanged: (value) {
+                    setState(() {
+                      comment = value;
+                    });
+                  },
+                  validator: widget.commentValidator,
+                ),
+              ],
             ),
           ),
         ),
@@ -362,5 +414,12 @@ class _FormModalState extends State<FormModal> {
           ),
       ],
     ];
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    visitDateController.dispose();
   }
 }

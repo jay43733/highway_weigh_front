@@ -46,13 +46,38 @@ class MainReportService {
         final data = jsonDecode(response.body);
         return data;
       } else {
-        print("Erorr Status : ${response.statusCode}");
-        print("Erorr Body : ${response.body}");
-        final error = jsonDecode(response.body);
-        return error;
+        print("Error Status : ${response.statusCode}");
+        throw Exception("Error Body : ${response.body}");
       }
     } catch (e) {
       throw Exception("Failed : $e");
+    }
+  }
+
+  Future<Map<String, dynamic>> changeStatus(
+    int mainReportId,
+    int status,
+    String comment,
+  ) async {
+    final token = await storage.read(key: 'accessToken');
+    final url = Uri.parse("$baseUrl/main_reports/$mainReportId");
+    final headers = {
+      "Content-Type": 'application/json',
+      if (token != null) "Authorization": "Bearer $token",
+    };
+    final body = jsonEncode({"status": status, "comment": comment});
+    print("Fetching data : $url");
+    try {
+      final response = await http.patch(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data;
+      } else {
+        print("Error Status : ${response.statusCode}");
+        throw Exception("Error Body : ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Failed $e");
     }
   }
 }

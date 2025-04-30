@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:highway_weight/controllers/general_lists_controller.dart';
+import 'package:highway_weight/controllers/general_reports_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/views/general_reports/general_report_form.dart';

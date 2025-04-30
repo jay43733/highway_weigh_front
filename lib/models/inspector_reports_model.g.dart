@@ -18,6 +18,10 @@ InspectorReportsModel _$InspectorReportsModelFromJson(
   ),
   cameraAddress: json['camera_address'] as String?,
   description: json['description'] as String?,
+  whoInspect:
+      json['who_inspect'] == null
+          ? null
+          : UsersModel.fromJson(json['who_inspect'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$InspectorReportsModelToJson(
@@ -30,4 +34,5 @@ Map<String, dynamic> _$InspectorReportsModelToJson(
   'status': instance.status,
   'is_verified': instance.isVerified,
   'main_report': instance.mainReportsModel,
+  'who_inspect': instance.whoInspect,
 };

@@ -13,15 +13,13 @@ class MainReportService {
       if (token != null) "Authorization": "Bearer $token",
     };
     try {
-      print("Fetching data : $url");
       final response = await http.get(url, headers: headers);
-      print("Response Status : ${response.statusCode}");
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data;
       } else {
-        print("Erorr Status : ${response.statusCode}");
-        print("Erorr Body : ${response.body}");
+        print("Error Status : ${response.statusCode}");
+        print("Error Body : ${response.body}");
         final error = jsonDecode(response.body);
         return error;
       }
@@ -39,9 +37,7 @@ class MainReportService {
     };
     final body = jsonEncode({"general_report_id": generalReportId});
     try {
-      print("Fetching data : $url");
       final response = await http.post(url, headers: headers, body: body);
-      print("Response Status : ${response.statusCode}");
       if (response.statusCode == 201) {
         final data = jsonDecode(response.body);
         return data;
@@ -66,7 +62,6 @@ class MainReportService {
       if (token != null) "Authorization": "Bearer $token",
     };
     final body = jsonEncode({"status": status, "comment": comment});
-    print("Fetching data : $url");
     try {
       final response = await http.patch(url, headers: headers, body: body);
       if (response.statusCode == 200) {

@@ -62,7 +62,6 @@ class StationsController extends ChangeNotifier {
         );
       }
       currentLocation = LatLng(lat, long);
-      print("Place focused: $currentLocation");
       notifyListeners();
     } catch (e) {
       print("❌ Error animating camera: $e");

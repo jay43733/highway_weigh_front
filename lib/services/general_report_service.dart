@@ -18,15 +18,13 @@ class GeneralReportService {
       if (token != null) "Authorization": "Bearer $token",
     };
     try {
-      print("Fetching data : $url");
       final response = await http.get(url, headers: headers);
-      print("Response Status : ${response.statusCode}");
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data;
       } else {
         final errorBody = jsonDecode(response.body);
-        print("Error from ${errorBody}");
+        print("Error from $errorBody");
       }
     } catch (e) {
       throw Exception("Failed: $e");
@@ -39,7 +37,6 @@ class GeneralReportService {
 
     final random = Random().nextInt(1000000000);
     final extension = p.extension(file).toLowerCase();
-    print('New name :$timestamp-$random$extension');
     return '$timestamp-$random$extension';
   }
 
@@ -57,7 +54,6 @@ class GeneralReportService {
       throw Exception("No access token found");
     }
     final url = Uri.parse("$baseUrl/general_reports");
-    print("Fetching data $url");
     final mimeType = lookupMimeType(imageFileName, headerBytes: image);
     final mediaType = MediaType.parse(mimeType ?? "application/octet-stream");
     try {
@@ -86,8 +82,8 @@ class GeneralReportService {
         final jsonData = jsonDecode(response.body);
         return jsonData;
       } else {
-        print("Create Status code : ${response.statusCode}");
-        print("Create Body: ${response.body}");
+        print("Error Status code : ${response.statusCode}");
+        print("Error Body: ${response.body}");
       }
     } catch (e) {
       throw Exception("Failed: $e");
@@ -110,7 +106,6 @@ class GeneralReportService {
     }
     final url = Uri.parse("$baseUrl/general_reports/$reportId");
 
-    print("Fetching data $url");
     try {
       final request = http.MultipartRequest("PATCH", url);
       request.headers['Authorization'] = 'Bearer $token';
@@ -163,13 +158,10 @@ class GeneralReportService {
       "Authorization": "Bearer $token",
     };
     final body = jsonEncode({'is_active': false});
-    print("Fetching Url : $url ");
     try {
       final response = await http.patch(url, headers: headers, body: body);
       if (response.statusCode == 200) {
         final jsonData = await jsonDecode(response.body);
-        print("Status: ${response.statusCode}");
-        print("Body: ${response.body}");
         return jsonData;
       } else {
         print("Status: ${response.statusCode}");
@@ -184,6 +176,7 @@ class GeneralReportService {
     int reportId,
     int status,
     String comment,
+    String? visitDate,
   ) async {
     final token = await storage.read(key: 'accessToken');
     if (token == null) {
@@ -194,13 +187,18 @@ class GeneralReportService {
       "Content-Type": 'application/json',
       "Authorization": "Bearer $token",
     };
-    final body = jsonEncode({'status': status, "comment": comment});
-    print("Fetching Url : $url ");
+    final body =
+        visitDate != null
+            ? jsonEncode({
+              'status': status,
+              "comment": comment,
+              "visit_date": visitDate,
+            })
+            : jsonEncode({'status': status, "comment": comment});
     try {
       final response = await http.patch(url, headers: headers, body: body);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("Status: ${response.statusCode}");
         return data;
       } else {
         print("Status: ${response.statusCode}");

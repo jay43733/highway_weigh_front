@@ -17,8 +17,6 @@ class CustomAnimatedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Url: $imageUrl");
-    // print("Image: $imagePath");
     return Stack(
       children: [
         DottedBorder(

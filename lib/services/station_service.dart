@@ -14,9 +14,7 @@ class StationService {
       if (token != null) "Authorization": "Bearer $token",
     };
     try {
-      print("Fetching data : $url");
       final response = await http.get(url, headers: headers);
-      print("Status Code : ${response.statusCode}");
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data;

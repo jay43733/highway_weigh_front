@@ -142,7 +142,42 @@ class AppTheme {
 
   static final DatePickerThemeData _datePickerThemeData = DatePickerThemeData(
     backgroundColor: AppColors.bgColor,
-    dayForegroundColor: WidgetStatePropertyAll(AppColors.blackPrimary),
+    todayBorder: BorderSide(color: AppColors.brandSecondary, width: 2.0),
+    todayBackgroundColor: WidgetStateColor.resolveWith((state) {
+      if (state.contains(WidgetState.selected)) {
+        return AppColors.brandSecondary;
+      }
+      return AppColors.whitePrimary;
+    }),
+    todayForegroundColor: WidgetStateColor.resolveWith((state) {
+      if (state.contains(WidgetState.selected)) {
+        return AppColors.whitePrimary;
+      }
+      return AppColors.brandSecondary;
+    }),
+    dayBackgroundColor: WidgetStateProperty.resolveWith((state) {
+      if (state.contains(WidgetState.selected)) {
+        return AppColors.brandSecondary;
+      }
+      return AppColors.whitePrimary;
+    }),
+    yearStyle: TextStyles.subtitleReg,
+    dividerColor: AppColors.blackPlaceholder,
+    headerHeadlineStyle: TextStyles.titleSemi,
+    confirmButtonStyle: ButtonStyle(
+      textStyle: WidgetStatePropertyAll(TextStyles.ctaBodyReg),
+      foregroundColor: WidgetStatePropertyAll(AppColors.blackPrimary),
+    ),
+    cancelButtonStyle: ButtonStyle(
+      textStyle: WidgetStatePropertyAll(TextStyles.ctaBodyReg),
+      foregroundColor: WidgetStatePropertyAll(AppColors.blackPrimary),
+    ),
+    dayForegroundColor: WidgetStateProperty.resolveWith((state) {
+      if (state.contains(WidgetState.selected)) {
+        return AppColors.whitePure;
+      }
+      return AppColors.blackPrimary;
+    }),
     dayStyle: TextStyles.bodySemi,
   );
 

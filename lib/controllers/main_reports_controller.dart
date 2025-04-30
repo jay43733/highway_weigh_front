@@ -39,19 +39,23 @@ class MainReportsController extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final updateMainReport = await _repository.changeStatus(
-        mainReportId,
-        2,
-        comment,
-      );
-      final index = mainReportLists.indexWhere(
-        (item) => item.id == mainReportId,
-      );
-      if (index != -1) {
-        mainReportLists[index] = updateMainReport;
+      if (mainReportId != 0) {
+        final updateMainReport = await _repository.changeStatus(
+          mainReportId,
+          2,
+          comment,
+        );
+        final index = mainReportLists.indexWhere(
+          (item) => item.id == mainReportId,
+        );
+        if (index != -1) {
+          mainReportLists[index] = updateMainReport;
+        }
+        await fetchMainReports();
       }
-      await fetchMainReports();
     } catch (e) {
+      isLoading = false;
+      notifyListeners();
       throw Exception("Fail to fetch get main $e");
     } finally {
       isLoading = false;
@@ -63,24 +67,37 @@ class MainReportsController extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      final updateMainReport = await _repository.changeStatus(
-        mainReportId,
-        3,
-        comment,
-      );
-      final index = mainReportLists.indexWhere(
-        (item) => item.id == mainReportId,
-      );
-      if (index != -1) {
-        mainReportLists[index] = updateMainReport;
+      if (mainReportId != 0) {
+        final updateMainReport = await _repository.changeStatus(
+          mainReportId,
+          3,
+          comment,
+        );
+        final index = mainReportLists.indexWhere(
+          (item) => item.id == mainReportId,
+        );
+        if (index != -1) {
+          mainReportLists[index] = updateMainReport;
+        }
+        await fetchMainReports();
       }
-      await fetchMainReports();
     } catch (e) {
+      isLoading = false;
+      notifyListeners();
       throw Exception("Fail to fetch get main $e");
     } finally {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  String? validateField(String field, dynamic value) {
+    if (field == 'comment') {
+      if (value == '') {
+        return "Please fill your comment.";
+      }
+    }
+    return null;
   }
 
   void onPageChanged(int newPage) {

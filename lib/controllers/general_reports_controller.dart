@@ -182,12 +182,21 @@ class GeneralReportsController extends ChangeNotifier {
     }
   }
 
-  Future<void> approveGeneralReport(int id, String comment) async {
+  Future<void> approveGeneralReport(
+    int id,
+    String comment,
+    String? visitDate,
+  ) async {
     isLoading = true;
     notifyListeners();
     try {
       if (id != 0) {
-        final result = await _repository.changeStatus(id, 2, comment);
+        final result = await _repository.changeStatus(
+          id,
+          2,
+          comment,
+          visitDate,
+        );
         final index = generalReportLists.indexWhere((item) => item.id == id);
         if (index != -1) {
           generalReportLists[index] = result;
@@ -204,12 +213,21 @@ class GeneralReportsController extends ChangeNotifier {
     }
   }
 
-  Future<void> rejectGeneralReport(int id, String comment) async {
+  Future<void> rejectGeneralReport(
+    int id,
+    String comment,
+    String? visitDate,
+  ) async {
     isLoading = true;
     notifyListeners();
     try {
       if (id != 0) {
-        final result = await _repository.changeStatus(id, 3, comment);
+        final result = await _repository.changeStatus(
+          id,
+          3,
+          comment,
+          visitDate,
+        );
         final index = generalReportLists.indexWhere((item) => item.id == id);
         if (index != -1) {
           generalReportLists[index] = result;
@@ -289,6 +307,15 @@ class GeneralReportsController extends ChangeNotifier {
       final parsed = DateTime.tryParse(value);
       if (parsed != null && parsed.isAfter(DateTime.now())) {
         return "Report date cannot be in the future.";
+      }
+    }
+    if (field == 'visitDate') {
+      if (value == '') {
+        return "Please set your visit date.";
+      }
+      final parsed = DateTime.tryParse(value);
+      if (parsed != null && parsed.isBefore(DateTime.now())) {
+        return "Visit date cannot be in the past.";
       }
     }
 

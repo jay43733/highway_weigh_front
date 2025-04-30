@@ -30,7 +30,7 @@ class MainReportRepository {
     String comment,
   ) async {
     try {
-      final jsonData = await this._service.changeStatus(
+      final jsonData = await _service.changeStatus(
         mainReportId,
         status,
         comment,

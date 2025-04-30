@@ -13,3 +13,21 @@ List<String> generalReportHeaders = [
   "สถานะ",
   "",
 ];
+List<String> mainReportHeaders = [
+  "ลำดับ",
+  "หัวข้อ",
+  "ประเภท",
+  "สถานี",
+  "อนุมัติเมื่อ",
+  "สถานะ",
+  "",
+];
+List<String> inspectorReportHeaders = [
+  "ลำดับ",
+  "หัวข้อ",
+  "ประเภท",
+  "สถานี",
+  "วันที่ตรวจ",
+  "สถานะ",
+  "",
+];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:highway_weight/constants/app_constants.dart';
 import 'package:highway_weight/controllers/auth_controller.dart';
+import 'package:highway_weight/controllers/inspector_reports_controller.dart';
 import 'package:highway_weight/controllers/main_reports_controller.dart';
 import 'package:highway_weight/models/general_reports_model.dart';
 import 'package:highway_weight/styles/colors.dart';
@@ -13,16 +14,18 @@ import 'package:intl/intl.dart';
 
 class HomeMainReports extends StatelessWidget {
   final AuthController authController;
-  final MainReportsController mainListsController;
+  final MainReportsController mainReportsController;
+  final InspectorReportsController inspectorReportsController;
   const HomeMainReports({
     super.key,
-    required this.mainListsController,
+    required this.mainReportsController,
     required this.authController,
+    required this.inspectorReportsController,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (mainListsController.mainReportLists.isEmpty) {
+    if (mainReportsController.mainReportLists.isEmpty) {
       return Container(
         padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 60.0),
         child: Column(
@@ -33,9 +36,7 @@ class HomeMainReports extends StatelessWidget {
             Center(
               child: Text(
                 "ไม่มีรายการอนุมัติออกตรวจ",
-                style: TextStyles.labelReg.copyWith(
-                  color: AppColors.redColor,
-                ),
+                style: TextStyles.labelReg.copyWith(color: AppColors.redColor),
               ),
             ),
           ],
@@ -51,7 +52,9 @@ class HomeMainReports extends StatelessWidget {
           children: [
             const Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [Text("รายการอนุมัติออกตรวจ", style: TextStyles.h4Semi)],
+              children: [
+                Text("รายการอนุมัติออกตรวจ", style: TextStyles.h4Semi),
+              ],
             ),
             SizedBox(height: 24.0),
             ConstrainedBox(
@@ -60,16 +63,16 @@ class HomeMainReports extends StatelessWidget {
                 columnSpacing: 48.0,
                 sortAscending: true,
                 columns:
-                    generalReportHeaders.asMap().entries.map((entries) {
+                    mainReportHeaders.asMap().entries.map((entries) {
                       return DataColumn(label: Text(entries.value));
                     }).toList(),
                 rows:
-                    mainListsController.getPaginatedMainLists().asMap().entries.map((
+                    mainReportsController.getPaginatedMainLists().asMap().entries.map((
                       entries,
                     ) {
                       final continuousIndex =
-                          (mainListsController.currentPage *
-                              mainListsController.itemsPerPage) +
+                          (mainReportsController.currentPage *
+                              mainReportsController.itemsPerPage) +
                           entries.key +
                           1;
                       return DataRow(
@@ -114,6 +117,7 @@ class HomeMainReports extends StatelessWidget {
                             Text(
                               DateFormat(
                                 "yyyy-MM-dd HH:mm",
+                                "th_TH",
                               ).format(entries.value.createdAt),
                             ),
                           ),
@@ -135,22 +139,28 @@ class HomeMainReports extends StatelessWidget {
                               ),
                             ),
                           ),
+
                           DataCell(
                             authController.role == '1' &&
                                     entries.value.status == 1
                                 ? CustomTextButton(
-                                  icon: Icons.mark_unread_chat_alt,
+                                  icon: Icons.mark_email_unread_outlined,
                                   text: "Review",
                                   onPressed: () {
-                                    // generalReportsController.updateAllField(
-                                    //   entries.value,
-                                    // );
                                     FormModal.showModal(
                                       formName: "main",
+                                      reportedDate:
+                                          entries
+                                              .value
+                                              .generalListReport
+                                              .reportedDate,
                                       status: entries.value.status,
                                       role: authController.role,
                                       context,
                                       title: "Approve & Comment",
+                                      commentValidator:
+                                          (value) => mainReportsController
+                                              .validateField("comment", value),
                                       generalName:
                                           entries.value.generalListReport.name,
                                       description:
@@ -176,40 +186,40 @@ class HomeMainReports extends StatelessWidget {
                                               .value
                                               .generalListReport
                                               .imageUrl,
+                                      visitDate:
+                                          entries
+                                              .value
+                                              .generalListReport
+                                              .visitDate,
                                       primaryButtonText: "APPROVE",
                                       primaryButtonOnPressed: (
                                         String comment,
+                                        String? visitDate,
                                       ) async {
+                                        final int reportId = entries.value.id;
                                         try {
+                                          await Future.delayed(
+                                            const Duration(milliseconds: 100),
+                                          );
+                                          await mainReportsController
+                                              .approveMainReports(
+                                                reportId,
+                                                comment,
+                                              );
+
+                                          await Future.delayed(
+                                            const Duration(milliseconds: 500),
+                                          );
+
+                                          await inspectorReportsController
+                                              .createInspectorReport(reportId);
                                           if (context.mounted) {
                                             Navigator.of(
                                               context,
                                               rootNavigator: true,
                                             ).pop();
                                           }
-
-                                          await Future.delayed(
-                                            const Duration(milliseconds: 100),
-                                          );
-                                          // await generalReportsController
-                                          //     .approveGeneralReport(
-                                          //       entries.value.id,
-                                          //       comment,
-                                          //     );
-
-                                          await Future.delayed(
-                                            const Duration(milliseconds: 500),
-                                          );
-
-                                          // await mainReportsController
-                                          //     .createMainReports(
-                                          //       entries.value.id,
-                                          //     );
-
-                                          // generalReportsController
-                                          //     .resetAllField();
                                         } catch (e) {
-                                          print('Error occurred: $e');
                                           if (context.mounted) {
                                             Navigator.of(
                                               context,
@@ -224,23 +234,22 @@ class HomeMainReports extends StatelessWidget {
                                       secondaryButtonOnPressed: (
                                         String comment,
                                       ) async {
+                                        final int reportId = entries.value.id;
+
+                                        await Future.delayed(
+                                          const Duration(milliseconds: 100),
+                                        );
+                                        await mainReportsController
+                                            .rejectMainReports(
+                                              reportId,
+                                              comment,
+                                            );
                                         if (context.mounted) {
                                           Navigator.of(
                                             context,
                                             rootNavigator: true,
                                           ).pop();
                                         }
-
-                                        await Future.delayed(
-                                          const Duration(milliseconds: 100),
-                                        );
-                                        //   await generalReportsController
-                                        //       .rejectGeneralReport(
-                                        //         entries.value.id,
-                                        //         comment,
-                                        //       );
-                                        //   generalReportsController
-                                        //       .resetAllField();
                                       },
                                     );
                                   },
@@ -251,13 +260,18 @@ class HomeMainReports extends StatelessWidget {
                                   onPressed: () {
                                     FormModal.showModal(
                                       formName: "main",
+                                      reportedDate:
+                                          entries
+                                              .value
+                                              .generalListReport
+                                              .reportedDate,
                                       status: entries.value.status,
                                       role: authController.role,
                                       context,
                                       caption:
-                                          "Created at ${DateFormat("yyyy-MM-dd HH:mm").format(entries.value.createdAt)}",
+                                          "อนุมัติเมื่อ ${DateFormat("yyyy-MM-dd HH:mm", "th_TH").format(entries.value.createdAt)}",
                                       title:
-                                          "Created by ${entries.value.generalListReport.whoCreated?.name}",
+                                          "สร้างโดย ${entries.value.generalListReport.whoCreated?.name}",
                                       generalName:
                                           entries.value.generalListReport.name,
                                       description:
@@ -293,10 +307,10 @@ class HomeMainReports extends StatelessWidget {
             ),
             SizedBox(height: 28.0),
             Pagination(
-              onPageChanged: mainListsController.onPageChanged,
-              itemPerPage: mainListsController.itemsPerPage,
-              totalPages: mainListsController.mainReportLists.length,
-              currentPage: mainListsController.currentPage,
+              onPageChanged: mainReportsController.onPageChanged,
+              itemPerPage: mainReportsController.itemsPerPage,
+              totalPages: mainReportsController.mainReportLists.length,
+              currentPage: mainReportsController.currentPage,
             ),
           ],
         ),

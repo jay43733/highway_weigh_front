@@ -82,12 +82,14 @@ class GeneralReportRepository {
     int reportId,
     int status,
     String comment,
+    String? visitDate,
   ) async {
     try {
       final jsonData = await _service.changeReportStatus(
         reportId,
         status,
         comment,
+        visitDate,
       );
       final result = GeneralReportsModel.fromJson(jsonData);
       return result;

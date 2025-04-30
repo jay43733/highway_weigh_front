@@ -133,7 +133,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: TextButton(
                     onPressed: () {
-                      onNavBarChanged == null ? null : onNavBarChanged!(1);
+                      onNavBarChanged == null ? null : onNavBarChanged!(2);
                     },
                     child: Text(
                       'รายการรอสุ่มตรวจ',
@@ -145,7 +145,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                   child: TextButton(
                     onPressed: () {
-                      onNavBarChanged == null ? null : onNavBarChanged!(2);
+                      onNavBarChanged == null ? null : onNavBarChanged!(3);
                     },
                     child: Text(
                       'แผนที่สถานี',

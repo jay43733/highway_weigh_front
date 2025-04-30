@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:highway_weight/controllers/auth_controller.dart';
-import 'package:highway_weight/controllers/general_lists_controller.dart';
+import 'package:highway_weight/controllers/general_reports_controller.dart';
 import 'package:highway_weight/controllers/inspector_reports_controller.dart';
 import 'package:highway_weight/controllers/main_reports_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(() {
       inspectorReportsController = Provider.of(context, listen: false);
@@ -99,12 +98,14 @@ class _HomePageState extends State<HomePage> {
                 ),
                 HomeMainReports(
                   authController: authController,
-                  mainListsController: mainReportController,
+                  mainReportsController: mainReportController,
+                  inspectorReportsController: inspectorReportController,
                   key: navBarKey[1],
                 ),
                 HomeInspectorReports(
                   authController: authController,
                   inspectorReportsController: inspectorReportController,
+                  generalReportsController: generalReportController,
                   key: navBarKey[2],
                 ),
                 HomeMap(

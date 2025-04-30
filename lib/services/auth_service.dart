@@ -8,13 +8,9 @@ class AuthService {
     final headers = {"Content-Type": 'application/json'};
     final body = jsonEncode({'email': email, 'password': password});
     try {
-      print("Fetching Url : $url ");
       final response = await http.post(url, headers: headers, body: body);
-      print("Response Body: ${response.statusCode}");
       if (response.statusCode == 201) {
-        print("Response Body: ${response.body}");
         final data = jsonDecode(response.body);
-        print("Return data : $data ");
         return data;
       } else {
         final errorBody = jsonDecode(response.body);

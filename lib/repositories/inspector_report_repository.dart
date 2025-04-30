@@ -23,4 +23,24 @@ class InspectorReportRepository {
       throw Exception("Failed to fetch $e");
     }
   }
+
+  Future<InspectorReportsModel> bookInspectorReport(
+    int id,
+    int status,
+    String visitDate,
+    String comment,
+  ) async {
+    try {
+      final jsonData = await _service.bookInspectorReport(
+        id,
+        status,
+        visitDate,
+        comment,
+      );
+      final result = InspectorReportsModel.fromJson(jsonData);
+      return result;
+    } catch (e) {
+      throw Exception("Failed to fetch $e");
+    }
+  }
 }

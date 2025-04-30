@@ -1,26 +1,44 @@
+import 'package:flutter/material.dart';
 import 'package:highway_weight/models/main_reports_model.dart';
+import 'package:highway_weight/models/users_model.dart';
+import 'package:highway_weight/styles/colors.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'inspector_reports_model.g.dart';
 
-class StatusType {
+class InspectorReportStatusType {
   static int pending = 1;
-  static int inProgress = 2;
-  static int completed = 3;
-  static int rejected = 4;
+  static int booked = 2;
+  static int inProgress = 3;
+  static int completed = 4;
 
   static String getTitle(int type) {
     switch (type) {
       case 1:
         return "Pending";
       case 2:
-        return "In progress";
+        return "Booked";
       case 3:
-        return "Completed";
+        return "In progress";
       case 4:
-        return "Rejected";
+        return "Completed";
       default:
         return "";
+    }
+  }
+
+  static Color getColor(int type) {
+    switch (type) {
+      case 1:
+        return AppColors.yellowColor;
+      case 2:
+        return AppColors.brandPrimary;
+      case 3:
+        return AppColors.greyPrimary;
+      case 4:
+        return AppColors.greenColor;
+      default:
+        return AppColors.greyPrimary;
     }
   }
 }
@@ -61,6 +79,9 @@ class InspectorReportsModel {
   @JsonKey(name: "main_report")
   final MainReportsModel mainReportsModel;
 
+  @JsonKey(name: "who_inspect", includeIfNull: true)
+  final UsersModel? whoInspect;
+
   InspectorReportsModel({
     required this.id,
     required this.createdAt,
@@ -69,10 +90,11 @@ class InspectorReportsModel {
     required this.mainReportsModel,
     this.cameraAddress,
     this.description,
+    this.whoInspect,
   });
 
-   factory InspectorReportsModel.fromJson(Map<String, dynamic> json) =>
+  factory InspectorReportsModel.fromJson(Map<String, dynamic> json) =>
       _$InspectorReportsModelFromJson(json);
 
-  Map<String, dynamic> toJson()=> _$InspectorReportsModelToJson(this);
+  Map<String, dynamic> toJson() => _$InspectorReportsModelToJson(this);
 }

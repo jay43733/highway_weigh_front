@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:highway_weight/constants/app_constants.dart';
 import 'package:highway_weight/controllers/auth_controller.dart';
-import 'package:highway_weight/controllers/general_lists_controller.dart';
+import 'package:highway_weight/controllers/general_reports_controller.dart';
 import 'package:highway_weight/controllers/main_reports_controller.dart';
 import 'package:highway_weight/models/general_reports_model.dart';
 import 'package:highway_weight/styles/colors.dart';
@@ -64,9 +64,7 @@ class HomeGeneralReports extends StatelessWidget {
             Center(
               child: Text(
                 "ไม่มีรายการข้อร้องเรียน",
-                style: TextStyles.labelReg.copyWith(
-                  color: AppColors.redColor,
-                ),
+                style: TextStyles.labelReg.copyWith(color: AppColors.redColor),
               ),
             ),
           ],
@@ -155,7 +153,7 @@ class HomeGeneralReports extends StatelessWidget {
                               DataCell(
                                 Text(
                                   DateFormat(
-                                    "yyyy-MM-dd HH:mm",
+                                    "yyyy-MM-dd HH:mm", "th_TH",
                                   ).format(entries.value.createdAt),
                                 ),
                               ),
@@ -183,7 +181,7 @@ class HomeGeneralReports extends StatelessWidget {
                                     : authController.role == '2' &&
                                         entries.value.status == 1
                                     ? CustomTextButton(
-                                      icon: Icons.mark_unread_chat_alt,
+                                      icon: Icons.mark_email_unread_outlined,
                                       text: "Review",
                                       onPressed: () {
                                         generalReportsController.updateAllField(
@@ -192,6 +190,7 @@ class HomeGeneralReports extends StatelessWidget {
                                         FormModal.showModal(
                                           formName: "general",
                                           status: entries.value.status,
+                                          reportedDate: entries.value.reportedDate,
                                           role: authController.role,
                                           context,
                                           title: "Approve & Comment",
@@ -217,6 +216,7 @@ class HomeGeneralReports extends StatelessWidget {
                                           primaryButtonText: "APPROVE",
                                           primaryButtonOnPressed: (
                                             String comment,
+                                            String? visitDate,
                                           ) async {
                                             try {
                                               if (context.mounted) {
@@ -235,6 +235,7 @@ class HomeGeneralReports extends StatelessWidget {
                                                   .approveGeneralReport(
                                                     entries.value.id,
                                                     comment,
+                                                    visitDate,
                                                   );
 
                                               await Future.delayed(
@@ -281,6 +282,7 @@ class HomeGeneralReports extends StatelessWidget {
                                                 .rejectGeneralReport(
                                                   entries.value.id,
                                                   comment,
+                                                  null,
                                                 );
                                             generalReportsController
                                                 .resetAllField();
@@ -351,13 +353,14 @@ class HomeGeneralReports extends StatelessWidget {
                                       onPressed: () {
                                         FormModal.showModal(
                                           formName: "general",
+                                          reportedDate: entries.value.reportedDate,
                                           status: entries.value.status,
                                           role: authController.role,
                                           context,
                                           caption:
-                                              "Created at ${DateFormat("yyyy-MM-dd HH:mm").format(entries.value.createdAt)}",
+                                              "เมื่อ ${DateFormat("yyyy-MM-dd HH:mm", "th_TH").format(entries.value.createdAt)}",
                                           title:
-                                              "Created by ${entries.value.whoCreated?.name}",
+                                              "สร้างโดย ${entries.value.whoCreated?.name}",
                                           generalName: entries.value.name,
                                           description:
                                               entries.value.description,

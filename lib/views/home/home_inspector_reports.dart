@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:highway_weight/constants/app_constants.dart';
 import 'package:highway_weight/controllers/auth_controller.dart';
+import 'package:highway_weight/controllers/general_reports_controller.dart';
 import 'package:highway_weight/controllers/inspector_reports_controller.dart';
 import 'package:highway_weight/models/general_reports_model.dart';
+import 'package:highway_weight/models/inspector_reports_model.dart';
 import 'package:highway_weight/styles/colors.dart';
 import 'package:highway_weight/styles/text_styles.dart';
 import 'package:highway_weight/widgets/custom_text_button.dart';
@@ -14,10 +16,12 @@ import 'package:intl/intl.dart';
 class HomeInspectorReports extends StatelessWidget {
   final AuthController authController;
   final InspectorReportsController inspectorReportsController;
+  final GeneralReportsController generalReportsController;
   const HomeInspectorReports({
     super.key,
     required this.inspectorReportsController,
     required this.authController,
+    required this.generalReportsController,
   });
 
   @override
@@ -49,9 +53,7 @@ class HomeInspectorReports extends StatelessWidget {
           children: [
             const Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text("รายการรอสุ่มตรวจ", style: TextStyles.h4Semi),
-              ],
+              children: [Text("รายการรอสุ่มตรวจ", style: TextStyles.h4Semi)],
             ),
             SizedBox(height: 24.0),
             ConstrainedBox(
@@ -60,278 +62,302 @@ class HomeInspectorReports extends StatelessWidget {
                 columnSpacing: 48.0,
                 sortAscending: true,
                 columns:
-                    generalReportHeaders.asMap().entries.map((entries) {
+                    inspectorReportHeaders.asMap().entries.map((entries) {
                       return DataColumn(label: Text(entries.value));
                     }).toList(),
                 rows:
-                    inspectorReportsController
-                        .getPaginatedMainLists()
-                        .asMap()
-                        .entries
-                        .map((entries) {
-                          final continuousIndex =
-                              (inspectorReportsController.currentPage *
-                                  inspectorReportsController.itemsPerPage) +
-                              entries.key +
-                              1;
-                          return DataRow(
-                            color: WidgetStatePropertyAll(
-                              entries.key.isEven
-                                  ? AppColors.tableEvenRowColor
-                                  : AppColors.tableOddRowColor,
-                            ),
-                            cells: [
-                              DataCell(Text((continuousIndex).toString())),
-                              DataCell(
-                                SizedBox(
-                                  width: 200.0,
-                                  child: Tooltip(
-                                    message:
-                                        entries
-                                            .value
-                                            .mainReportsModel
-                                            .generalListReport
-                                            .name,
-                                    child: Text(
-                                      entries
-                                          .value
-                                          .mainReportsModel
-                                          .generalListReport
-                                          .name,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              DataCell(
-                                SizedBox(
-                                  width: 140.0,
-                                  child: Text(
-                                    IssueCategory.getTitle(
-                                      entries
-                                          .value
-                                          .mainReportsModel
-                                          .generalListReport
-                                          .category,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              DataCell(
-                                SizedBox(
-                                  width: 200.0,
-                                  child: Text(
+                    inspectorReportsController.getPaginatedMainLists().asMap().entries.map((
+                      entries,
+                    ) {
+                      final continuousIndex =
+                          (inspectorReportsController.currentPage *
+                              inspectorReportsController.itemsPerPage) +
+                          entries.key +
+                          1;
+                      return DataRow(
+                        color: WidgetStatePropertyAll(
+                          entries.key.isEven
+                              ? AppColors.tableEvenRowColor
+                              : AppColors.tableOddRowColor,
+                        ),
+                        cells: [
+                          DataCell(Text((continuousIndex).toString())),
+                          DataCell(
+                            SizedBox(
+                              width: 200.0,
+                              child: Tooltip(
+                                message:
                                     entries
                                         .value
                                         .mainReportsModel
                                         .generalListReport
-                                        .station
                                         .name,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                child: Text(
+                                  entries
+                                      .value
+                                      .mainReportsModel
+                                      .generalListReport
+                                      .name,
                                 ),
                               ),
-                              DataCell(
-                                Text(
-                                  DateFormat(
-                                    "yyyy-MM-dd HH:mm",
-                                  ).format(entries.value.createdAt),
+                            ),
+                          ),
+                          DataCell(
+                            SizedBox(
+                              width: 140.0,
+                              child: Text(
+                                IssueCategory.getTitle(
+                                  entries
+                                      .value
+                                      .mainReportsModel
+                                      .generalListReport
+                                      .category,
                                 ),
                               ),
-                              DataCell(
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: StatusType.getColor(
-                                      entries.value.status,
-                                    ),
-                                    borderRadius: BorderRadius.circular(24.0),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0,
-                                    vertical: 4.0,
-                                  ),
-                                  child: Text(
-                                    StatusType.getTitle(entries.value.status),
-                                    style: TextStyles.labelSemi,
-                                  ),
-                                ),
+                            ),
+                          ),
+                          DataCell(
+                            SizedBox(
+                              width: 200.0,
+                              child: Text(
+                                entries
+                                    .value
+                                    .mainReportsModel
+                                    .generalListReport
+                                    .station
+                                    .name,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              DataCell(
-                                authController.role == '1' &&
-                                        entries.value.status == 1
-                                    ? CustomTextButton(
-                                      icon: Icons.mark_unread_chat_alt,
-                                      text: "Review",
-                                      onPressed: () {
-                                        // generalReportsController.updateAllField(
-                                        //   entries.value,
-                                        // );
-                                        FormModal.showModal(
-                                          formName: "main",
-                                          status: entries.value.status,
-                                          role: authController.role,
-                                          context,
-                                          title: "Approve & Comment",
-                                          generalName:
-                                              entries
-                                                  .value
-                                                  .mainReportsModel
-                                                  .generalListReport
-                                                  .name,
-                                          description:
-                                              entries
-                                                  .value
-                                                  .mainReportsModel
-                                                  .generalListReport
-                                                  .description,
-                                          category: IssueCategory.getTitle(
-                                            entries
-                                                .value
-                                                .mainReportsModel
-                                                .generalListReport
-                                                .category,
-                                          ),
+                            ),
+                          ),
+                          DataCell(
+                            SizedBox(
+                              width: 120.0,
+                              child: Text(
+                                entries
+                                        .value
+                                        .mainReportsModel
+                                        .generalListReport
+                                        .visitDate ??
+                                    "ยังไม่มีวันตรวจ",
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: InspectorReportStatusType.getColor(
+                                  entries.value.status,
+                                ),
+                                borderRadius: BorderRadius.circular(24.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                                vertical: 4.0,
+                              ),
+                              child: Text(
+                                InspectorReportStatusType.getTitle(entries.value.status),
+                                style: TextStyles.labelSemi,
+                              ),
+                            ),
+                          ),
+                          DataCell(
+                            authController.role == '4' &&
+                                    entries.value.status == 1
+                                ? CustomTextButton(
+                                  icon: Icons.mark_email_unread_outlined,
+                                  text: "Review",
+                                  onPressed: () {
+                                    FormModal.showModal(
+                                      formName: "inspector",
+                                      reportedDate:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .reportedDate,
+                                      status: entries.value.status,
+                                      role: authController.role,
+                                      context,
+                                      title: "โปรดตรวจสอบวันที่ออกตรวจและสถานี",
+                                      caption:
+                                          "หากยังไม่มีวันที่ออกตรวจ ผู้ตรวจต้องใส่วันที่ต้องการออกตรวจก่อน",
+                                      generalName:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .name,
+                                      description:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .description,
+                                      category: IssueCategory.getTitle(
+                                        entries
+                                            .value
+                                            .mainReportsModel
+                                            .generalListReport
+                                            .category,
+                                      ),
 
-                                          station:
-                                              entries
-                                                  .value
-                                                  .mainReportsModel
-                                                  .generalListReport
-                                                  .station
-                                                  .name,
-                                          imageUrl:
-                                              entries
-                                                  .value
-                                                  .mainReportsModel
-                                                  .generalListReport
-                                                  .imageUrl,
-                                          primaryButtonText: "APPROVE",
-                                          primaryButtonOnPressed: (
-                                            String comment,
-                                          ) async {
-                                            try {
-                                              if (context.mounted) {
-                                                Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                ).pop();
-                                              }
+                                      station:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .station
+                                              .name,
+                                      imageUrl:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .imageUrl,
+                                      visitDate:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .visitDate,
+                                      visitDateValidator:
+                                          (value) => generalReportsController
+                                              .validateField(
+                                                "visitDate",
+                                                value,
+                                              ),
+                                      commentValidator:
+                                          (value) => generalReportsController
+                                              .validateField("comment", value),
 
-                                              await Future.delayed(
-                                                const Duration(
-                                                  milliseconds: 100,
-                                                ),
-                                              );
-                                              // await generalReportsController
-                                              //     .approveGeneralReport(
-                                              //       entries.value.id,
-                                              //       comment,
-                                              //     );
+                                      primaryButtonText: "BOOK",
+                                      primaryButtonOnPressed: (
+                                        String comment,
+                                        String? visitDate,
+                                      ) async {
+                                        try {
+                                          if (comment != '' &&
+                                              visitDate != null) {
+                                            await inspectorReportsController
+                                                .bookInspectorReport(
+                                                  entries.value.id,
+                                                  2,
+                                                  visitDate,
+                                                  comment,
+                                                );
+                                          }
 
-                                              await Future.delayed(
-                                                const Duration(
-                                                  milliseconds: 500,
-                                                ),
-                                              );
+                                          await Future.delayed(
+                                            const Duration(milliseconds: 500),
+                                          );
 
-                                              // await mainReportsController
-                                              //     .createMainReports(
-                                              //       entries.value.id,
-                                              //     );
+                                          if (context.mounted) {
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop();
+                                          }
+                                        } catch (e) {
+                                          print('Error occurred: $e');
+                                          if (context.mounted) {
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop();
+                                          }
 
-                                              // generalReportsController
-                                              //     .resetAllField();
-                                            } catch (e) {
-                                              print('Error occurred: $e');
-                                              if (context.mounted) {
-                                                Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                ).pop();
-                                              }
-
-                                              ErrorSnackBar(
-                                                title: e.toString(),
-                                              );
-                                            }
-                                          },
-                                          secondaryButtonText: "REJECT",
-                                          secondaryButtonOnPressed: (
-                                            String comment,
-                                          ) async {
-                                            if (context.mounted) {
-                                              Navigator.of(
-                                                context,
-                                                rootNavigator: true,
-                                              ).pop();
-                                            }
-
-                                            await Future.delayed(
-                                              const Duration(milliseconds: 100),
-                                            );
-                                            //   await generalReportsController
-                                            //       .rejectGeneralReport(
-                                            //         entries.value.id,
-                                            //         comment,
-                                            //       );
-                                            //   generalReportsController
-                                            //       .resetAllField();
-                                          },
-                                        );
+                                          ErrorSnackBar(title: e.toString());
+                                        }
                                       },
-                                    )
-                                    : CustomTextButton(
-                                      icon: Icons.library_books_outlined,
-                                      text: "View",
-                                      onPressed: () {
-                                        FormModal.showModal(
-                                          formName: "main",
-                                          status: entries.value.status,
-                                          role: authController.role,
-                                          context,
-                                          caption:
-                                              "Created at ${DateFormat("yyyy-MM-dd HH:mm").format(entries.value.createdAt)}",
-                                          title:
-                                              "Created by ${entries.value.mainReportsModel.generalListReport.whoCreated?.name}",
-                                          generalName:
-                                              entries
-                                                  .value
-                                                  .mainReportsModel
-                                                  .generalListReport
-                                                  .name,
-                                          description:
-                                              entries
-                                                  .value
-                                                  .mainReportsModel
-                                                  .generalListReport
-                                                  .description,
-                                          category: IssueCategory.getTitle(
-                                            entries
-                                                .value
-                                                .mainReportsModel
-                                                .generalListReport
-                                                .category,
-                                          ),
-                                          station:
-                                              entries
-                                                  .value
-                                                  .mainReportsModel
-                                                  .generalListReport
-                                                  .station
-                                                  .name,
-                                          imageUrl:
-                                              entries
-                                                  .value
-                                                  .mainReportsModel
-                                                  .generalListReport
-                                                  .imageUrl,
+                                      secondaryButtonOnPressed: (
+                                        String comment,
+                                      ) async {
+                                        if (context.mounted) {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop();
+                                        }
+
+                                        await Future.delayed(
+                                          const Duration(milliseconds: 100),
                                         );
+                                        //   await generalReportsController
+                                        //       .rejectGeneralReport(
+                                        //         entries.value.id,
+                                        //         comment,
+                                        //       );
+                                        //   generalReportsController
+                                        //       .resetAllField();
                                       },
-                                    ),
-                              ),
-                            ],
-                          );
-                        })
-                        .toList(),
+                                    );
+                                  },
+                                )
+                                : CustomTextButton(
+                                  icon: Icons.library_books_outlined,
+                                  text: "View",
+                                  onPressed: () {
+                                    FormModal.showModal(
+                                      formName: "main",
+                                      status: entries.value.status,
+                                      reportedDate:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .reportedDate,
+                                      role: authController.role,
+                                      context,
+                                      caption:
+                                          "เมื่อ ${DateFormat("yyyy-MM-dd HH:mm", "th_TH").format(entries.value.createdAt)}",
+                                      title:
+                                          "สร้างโดย ${entries.value.mainReportsModel.generalListReport.whoCreated?.name}",
+                                      generalName:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .name,
+                                      description:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .description,
+                                      category: IssueCategory.getTitle(
+                                        entries
+                                            .value
+                                            .mainReportsModel
+                                            .generalListReport
+                                            .category,
+                                      ),
+                                      station:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .station
+                                              .name,
+                                      imageUrl:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .imageUrl,
+                                      visitDate:
+                                          entries
+                                              .value
+                                              .mainReportsModel
+                                              .generalListReport
+                                              .visitDate,
+                                    );
+                                  },
+                                ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
               ),
             ),
             SizedBox(height: 28.0),

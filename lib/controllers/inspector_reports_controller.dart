@@ -14,7 +14,57 @@ class InspectorReportsController extends ChangeNotifier {
     try {
       inspectorReportsLists = await _repository.getAll();
     } catch (e) {
+      _isLoading = false;
+      notifyListeners();
       throw Exception("Fail to fetch get Inspec $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> createInspectorReport(int mainReportId) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final newInspectorReport = await _repository.create(mainReportId);
+      inspectorReportsLists.add(newInspectorReport);
+      await fetchInspectorReport();
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+
+      throw Exception("Fail to fetch create Inspec $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> bookInspectorReport(
+    int id,
+    int status,
+    String visitDate,
+    String comment,
+  ) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final updateInspectorReport = await _repository.bookInspectorReport(
+        id,
+        status,
+        visitDate,
+        comment,
+      );
+      final index = inspectorReportsLists.indexWhere((item) => item.id == id);
+      if (index != -1) {
+        inspectorReportsLists[index] = updateInspectorReport;
+      }
+      await fetchInspectorReport();
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      throw Exception("Fail to fetch book Inspec $e");
     } finally {
       _isLoading = false;
       notifyListeners();

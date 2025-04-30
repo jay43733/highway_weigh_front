@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:highway_weight/controllers/general_lists_controller.dart';
+import 'package:highway_weight/controllers/general_reports_controller.dart';
 import 'package:highway_weight/controllers/stations_controller.dart';
 import 'package:highway_weight/models/general_reports_model.dart';
 import 'package:highway_weight/styles/colors.dart';
@@ -42,8 +42,10 @@ class _UpdateGeneralReportFormState extends State<UpdateGeneralReportForm> {
 
   @override
   Widget build(BuildContext context) {
-     print('Report : ${widget.generalReportsController.reportedDate}');
-    print('Update Report : ${widget.generalReportsController.updateReportedDate}');
+    print('Report : ${widget.generalReportsController.reportedDate}');
+    print(
+      'Update Report : ${widget.generalReportsController.updateReportedDate}',
+    );
     final _formKey = GlobalKey<FormState>();
     List<int> categoryOptions = [
       IssueCategory.overWeight,
@@ -255,7 +257,7 @@ class _UpdateGeneralReportFormState extends State<UpdateGeneralReportForm> {
                                 widget.generalReportsController.resetAllField();
                                 widget.generalReportsController.clearImage();
                               }
-                              context.pop();
+                              context.go('/home');
                             },
                           ),
                           SizedBox(width: 32.0),
@@ -287,9 +289,6 @@ class _UpdateGeneralReportFormState extends State<UpdateGeneralReportForm> {
                                 context.pop();
                               } else {
                                 ErrorSnackBar.show(context, title: "Error");
-                                print(
-                                  "Error : ${widget.generalReportsController.errorMessage['image']}",
-                                );
                               }
                             },
                           ),
